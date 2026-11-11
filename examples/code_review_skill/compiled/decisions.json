@@ -1,0 +1,60 @@
+{
+  "skill_name": "pr-security-and-test-review",
+  "source_path": "/Users/ruili/Code/AnyS1/examples/code_review_skill/SKILL.md",
+  "tau_default": 0.918,
+  "counts": {
+    "total": 4,
+    "D": 1,
+    "E": 2,
+    "G": 1
+  },
+  "decision_points": [
+    {
+      "id": "dp_01",
+      "type": "D",
+      "section": "Step 1: Pre-Flight Diff Check",
+      "anchor": "Check whether the pull request diff is empty or only touches markdown documentation files (`.md`).",
+      "question": "In section 'Step 1: Pre-Flight Diff Check', how should the agent proceed at: \"Check whether the pull request diff is empty or only touches markdown documentation files (`.md`).\"?",
+      "options": [
+        "**Option A**: Skip test execution and approve documentation-only diff immediately.",
+        "**Option B**: Proceed to security and test triage."
+      ],
+      "rule_hint": "bool(state_context.get('condition_met', False))"
+    },
+    {
+      "id": "dp_02",
+      "type": "E",
+      "section": "Step 2: Security Risk Classification",
+      "anchor": "Triage the modified files and diff hunks to classify the primary security risk surface:",
+      "question": "In section 'Step 2: Security Risk Classification', how should the agent proceed at: \"Triage the modified files and diff hunks to classify the primary security risk surface:\"?",
+      "options": [
+        "**Option A**: Authentication, session tokens, or permission boundary changes (High Risk).",
+        "**Option B**: Database schema, SQL query construction, or serialization changes (Medium Risk).",
+        "**Option C**: Pure UI styling, frontend layout, or non-sensitive business logic (Low Risk)."
+      ],
+      "rule_hint": ""
+    },
+    {
+      "id": "dp_03",
+      "type": "E",
+      "section": "Step 3: Verification Suite Selection",
+      "anchor": "Select one of the verification suites based on the diff scope and risk surface:",
+      "question": "In section 'Step 3: Verification Suite Selection', how should the agent proceed at: \"Select one of the verification suites based on the diff scope and risk surface:\"?",
+      "options": [
+        "**Option A**: Run full security + integration + unit test suite (`pytest tests/security tests/integration`).",
+        "**Option B**: Run targeted unit tests for modified modules only (`pytest -k modified`).",
+        "**Option C**: Run static linter and type-check only (`ruff check && mypy`)."
+      ],
+      "rule_hint": ""
+    },
+    {
+      "id": "dp_04",
+      "type": "G",
+      "section": "Step 4: Final Review Synthesis",
+      "anchor": "Write a comprehensive pull request review summary explaining the security findings, test outcomes, and concrete line-level recommendations for the author.",
+      "question": "In section 'Step 4: Final Review Synthesis', how should the agent proceed at: \"Write a comprehensive pull request review summary explaining the security findings, test outcomes, and concrete line-lev\"?",
+      "options": [],
+      "rule_hint": ""
+    }
+  ]
+}

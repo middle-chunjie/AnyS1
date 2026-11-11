@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "anys1"
+version = "0.1.0"
+description = "AnyS1: Compiling Procedural Agent Skills into Calibrated Dual-System Workflows"
+readme = "README.md"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.10"
+authors = [
+    {name = "AnyS1 Authors"}
+]
+keywords = ["llm", "agents", "skills", "system-1", "system-2", "selective-prediction", "calibration"]
+dependencies = [
+    "httpx>=0.27.0",
+    "openai>=1.40.0",
+    "pydantic>=2.7.0",
+]
+
+[project.optional-dependencies]
+train = [
+    "torch>=2.4.0",
+    "transformers>=4.45.0",
+    "peft>=0.13.0",
+    "safetensors>=0.4.3",
+    "accelerate>=0.34.0",
+]
+dev = [
+    "pytest>=8.0.0",
+]
+
+[project.scripts]
+anys1 = "anys1.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["anys1*"]
