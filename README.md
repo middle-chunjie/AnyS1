@@ -1,28 +1,36 @@
 # AnyS1: Compiling Procedural Agent Skills into Calibrated Dual-System Workflows
 
 <p align="center">
-  <a href="https://research.smsquirrel.top/"><b>🌐 Project Page</b></a> &nbsp;|&nbsp;
+  <a href="https://middle-chunjie.github.io/AnyS1/"><b>🌐 Project Page</b></a> &nbsp;|&nbsp;
   <a href="https://huggingface.co/datasets/middle-chunjie/SkillDP"><b>📦 SkillDP Dataset (HF)</b></a> &nbsp;|&nbsp;
   <a href="https://huggingface.co/middle-chunjie/AnyS1-4B"><b>🤗 AnyS1-4B Model (HF)</b></a>
 </p>
 
 **AnyS1** is an open-source framework and compiler that transforms natural-language procedural agent skills (`SKILL.md` files and standard operating procedures) into **calibrated dual-system (`System-1` + `System-2`) workflows**.
 
-Instead of invoking a heavy frontier `System-2` model (`DeepSeek-V4.1-Flash`, `GPT-6 Sol`, `Claude`) at every routine check and routing branch, **AnyS1** decomposes a skill into three decision types:
-- **`D` (Deterministic — 13.7%)**: Surface checks (regex, file existence, numeric thresholds) compiled into zero-token Python predicates.
-- **`E` (Enumerative — 72.1%)**: Bounded routing, triage, tool selection, and action choice over 2–6 candidate options, delegated to **`AnyS1-4B`** — a 4B single-forward-pass pointer network (`Qwen3.5-4B-Base` + LoRA + permutation-equivariant `OptionInteractionHead`) guarded by a calibrated confidence gate $p_{\max}(x) \ge \tau$ that automatically falls back to `System-2` when uncertain.
+Instead of invoking a heavy frontier `System-2` model at every routine check and routing branch, **AnyS1** decomposes a skill into three decision types (shares over the 17,865 decision points mined from 1,072 public skills):
+- **`D` (Deterministic — 21.3%)**: Surface checks (regex, file existence, numeric thresholds) compiled into zero-token Python predicates.
+- **`E` (Enumerable — 64.5%)**: Bounded routing, triage, tool selection, and action choice over a closed option set, delegated to **`AnyS1-4B`** — a 4B single-forward-pass pointer model (`Qwen3.5-4B-Base` + LoRA + permutation-equivariant `OptionInteractionHead`) guarded by a calibrated confidence gate $p_{\max}(x) \ge \tau$ that falls back to `System-2` when uncertain.
 - **`G` (Generative — 14.2%)**: Open-ended code writing and free-form synthesis routed directly to `System-2`.
 
 ---
 
 ## ✨ Key Results
 
-Across five agent benchmarks (**SkillsBench-A**, **SkillsBench-B**, **SOP-Bench**, **$\tau^2$-bench**, and **ALFWorld**):
-- **With `DeepSeek-V4.1-Flash` (`System-2`)**:
-  - **`AnyS1_warm`** ($\tau$ calibrated on development runs for $\ge 95\%$ agreement) delegates **62.4%** of enumerative decisions to `AnyS1-4B`, reducing **System-2 tokens by 50.6%** and **end-to-end wall-clock latency by 44.3%** while **improving task success by +0.6 points** (`84.2% -> 84.8%`).
-  - **`AnyS1_cold`** ($\tau_{\text{cold}} = 0.918$ transferred directly from held-out **SkillDP** states with **zero** target-workflow runs) delegates **41.8%** of enumerative decisions, cutting **System-2 tokens by 35.1%** and **latency by 30.8%** (`84.6%` task success).
-- **With `GPT-6 Sol` (`System-2`)**:
-  - The exact same **`AnyS1-4B`** checkpoint (without any retraining) saves **34.7% (`AnyS1_cold`)** to **49.8% (`AnyS1_warm`)** of `GPT-6 Sol` tokens while maintaining **`87.1%–87.2%`** task success (`All-S2`: `87.1%`).
+On three benchmarks unseen during training (**SOPBench**, **ALFWorld**, **WebShop**), each compiled into a D/E/G workflow, compared with the same workflow where `System-2` answers every decision (`All-S2`):
+
+| System-2 | Configuration | SOPBench pass | ALFWorld SR | WebShop score | Avg. Δ vs All-S2 | Avg. cost saving |
+|---|---|---|---|---|---|---|
+| DeepSeek-V4.1-Flash | All-S2 | 83.2 | 96.3 | 66.9 | – | – |
+| | `AnyS1_warm` | 84.3 | 95.5 | 68.1 | +0.5 | 38% |
+| | `AnyS1_cold` | 83.2 | 95.5 | 67.9 | +0.1 | 29% |
+| GPT-6 Sol | All-S2 | 82.1 | 96.3 | 70.6 | – | – |
+| | `AnyS1_warm` | 82.5 | 95.5 | 70.4 | −0.2 | 36% |
+| | `AnyS1_cold` | 82.5 | 94.0 | 70.1 | −0.8 | 31% |
+
+- `AnyS1_warm` fits $\tau$ on 50 unlabeled development runs of the target workflow; `AnyS1_cold` transfers $\tau_{\text{cold}} = 0.918$ with **zero** target-workflow runs. The same `AnyS1-4B` checkpoint is used with both `System-2` backbones, without retraining.
+- `AnyS1_warm` cuts episode cost by 30–44% and critical-path model time by 38–48% across benchmarks and backbones.
+- `AnyS1-4B` answers one decision in 22–32 ms (median, one H100 GPU).
 
 ---
 
@@ -72,7 +80,7 @@ anys1 compile examples/code_review_skill/SKILL.md -o examples/code_review_skill/
    # Attach as an MCP stdio server in Claude Code / Cursor / OpenHands:
    anys1 mcp --compiled examples/code_review_skill/compiled --s1-url http://127.0.0.1:8895/decide
    ```
-   When $p_{\max} \ge \tau$, `anys1_decide` returns `ACCEPTED_SYSTEM1` with the resolved option in ~15ms; when $p_{\max} < \tau$, it returns `DEFER_TO_SYSTEM2` so the host agent deliberates only on hard states.
+   When $p_{\max} \ge \tau$, `anys1_decide` returns `ACCEPTED_SYSTEM1` with the resolved option in one forward pass; when $p_{\max} < \tau$, it returns `DEFER_TO_SYSTEM2` so the host agent deliberates only on hard states.
 3. **`workflow.py` (Mode B — Programmable Python SDK)**:
    A clean Python class (`CompiledSkillWorkflow`) wired into `DualSystemRuntime`:
    ```python
