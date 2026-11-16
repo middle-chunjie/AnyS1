@@ -957,7 +957,10 @@
     .cp-legend span { display: inline-flex; align-items: center; gap: 6px; }
     .cp-dot { width: 18px; height: 18px; border-radius: 5px; display: inline-grid; place-items: center; font: 700 0.68rem var(--font-mono); color: #fff; flex: none; }
     .cp-dot.t-D { background: var(--d-node); } .cp-dot.t-E { background: var(--e-node); } .cp-dot.t-G { background: var(--g-node); }
-    .cp-grid { display: grid; grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr); gap: 20px; align-items: start; }
+    .cp-grid { display: grid; grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr); gap: 20px; align-items: stretch; }
+    .cp-grid > .cp-pane { display: flex; flex-direction: column; height: 640px; }
+    .cp-grid > .cp-pane > .cp-source, .cp-grid > .cp-pane > .cp-flow { flex: 1 1 auto; min-height: 0; max-height: none; }
+    .cp-source #skillInput { height: 100%; min-height: 0; resize: none; }
     @media (max-width: 920px) { .cp-grid { grid-template-columns: 1fr; } }
     .cp-pane { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); overflow: hidden; }
     .cp-pane-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--border); }
@@ -966,7 +969,8 @@
     .cp-edit-btn { appearance: none; border: 1px solid var(--border-strong); background: var(--surface); color: var(--fg-secondary); font: 600 0.76rem var(--font-sans); padding: 5px 12px; border-radius: 6px; cursor: pointer; }
     .cp-edit-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
     .cp-source { max-height: 560px; overflow: auto; padding: 10px 10px 12px; font-family: var(--font-mono); font-size: 0.76rem; line-height: 1.6; }
-    .cp-source .skill-editor { min-height: 520px; margin: 0; }
+    .cp-source .skill-editor { margin: 0; display: block; }
+    .cp-source .skill-editor[hidden] { display: none; }
     .cp-block { position: relative; padding: 6px 10px 6px 14px; margin: 2px 0; border-radius: 6px; border-left: 3px solid transparent; color: var(--fg-secondary); transition: background 0.15s ease; white-space: pre-wrap; word-break: break-word; }
     .cp-block.meta { color: var(--muted); }
     .cp-block.t-D { border-left-color: var(--d-node); }
@@ -986,7 +990,7 @@
     .cp-profile-text { font-size: 0.78rem; color: var(--fg-secondary); }
     .cp-profile-text b { color: var(--fg); }
     .cp-flow { list-style: none; margin: 0; padding: 14px 16px 6px; max-height: 560px; overflow: auto; }
-    @media (max-width: 920px) { .cp-flow, .cp-source { max-height: 460px; } .cp-presets { border-radius: 12px; } }
+    @media (max-width: 920px) { .cp-grid > .cp-pane { height: auto; } .cp-grid > .cp-pane > .cp-source, .cp-grid > .cp-pane > .cp-flow { max-height: 460px; } .cp-source #skillInput { height: 440px; } .cp-presets { border-radius: 12px; } }
     .cp-node { position: relative; display: grid; grid-template-columns: 26px 1fr; gap: 12px; padding-bottom: 14px; cursor: pointer; }
     .cp-node::before { content: ""; position: absolute; left: 12px; top: 26px; bottom: 0; width: 2px; background: var(--border); }
     .cp-node:last-child::before { display: none; }
@@ -1240,7 +1244,7 @@
           <div class="section-eyebrow" style="margin-bottom: 4px;">The Cost Ceiling Law (Equation 1)</div>
           <h3 style="margin: 0 0 8px; font-size: 1.06rem;">Why Enumerable Cost Share ($s_E$) Governs Maximum Savings</h3>
           <p style="margin: 0; font-size: 0.87rem; color: var(--fg-secondary);">
-            Splitting per-episode cost $C$ relative to an All-S2 baseline $C^{\mathrm{S2}}$ into System-2 generative turns ($C_G$), System-2 enumerable turns ($C_E$), and System-1 overhead ($\kappa$) reveals a structural ceiling: delegation can save at most $s_E - \kappa$.
+            Splitting per-episode cost $C$ relative to an All-S2 baseline $C^{\mathrm{S2}}$ into System-2 generative turns ($C_G$), System-2 enumerable turns ($C_E$), and System-1 overhead ($\kappa$) reveals a structural ceiling: if trajectories stay unchanged, delegation can save at most $s_E - \kappa$. Savings can exceed it only when delegation also shortens later turns, as on SOPBench (35% saved at $s_E = 28\%$).
           </p>
           <div style="margin-top: 12px; font-size: 0.94rem; overflow-x: auto;">
             $$\frac{C}{C^{\mathrm{S2}}} \;=\; \underbrace{\frac{C_G}{C^{\mathrm{S2}}}}_{\approx\,1-s_E\text{ (untouched)}} \;+\; \underbrace{\frac{C_E}{C^{\mathrm{S2}}}}_{\le\, s_E\text{ (delegable)}} \;+\; \underbrace{\frac{C_{\mathrm{S1}}}{C^{\mathrm{S2}}}}_{\kappa\text{ (S1 overhead)}}$$
