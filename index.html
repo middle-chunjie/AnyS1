@@ -1,0 +1,2869 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Thinking Fast, Anywhere: One System-1 for the Decision Points of Any Agent Workflow</title>
+  <meta name="description" content="AnyS1: One Calibrated 4B System-1 for the Decision Points of Any Agent Workflow — Any-DP Dataset (1,072 skills, 25,986 executed states), Skill Compiler, MCP Server &amp; SDK.">
+  <meta property="og:title" content="Thinking Fast, Anywhere: One System-1 for the Decision Points of Any Agent Workflow">
+  <meta property="og:description" content="Mine typed decision points from procedural skills (SKILL.md) once, train one calibrated 4B System-1 on 26K container-executed states, and cut System-2 agent cost by 30–44% and model time by 38–48% across unseen workflows.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="figures/fig_motivation.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AnyS1 · Thinking Fast, Anywhere">
+  <meta name="twitter:description" content="One calibrated 4B System-1 for the decision points of any agent workflow (Any-DP: 1,072 skills, 25,986 container-executed states).">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f8fafc;
+      --bg-subtle: #f1f5f9;
+      --surface: #ffffff;
+      --surface-elevated: #ffffff;
+      --surface-glass: rgba(255, 255, 255, 0.86);
+      --fg: #0f172a;
+      --fg-secondary: #334155;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --border-strong: #cbd5e1;
+
+      /* Primary & Semantic Accents */
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-soft: #eff6ff;
+      --primary-border: #bfdbfe;
+
+      --s1-fg: #1d4ed8;
+      --s1-bg: #eff6ff;
+      --s1-border: #93c5fd;
+
+      --zlg-fg: #0f766e;
+      --zlg-bg: #f0fdfa;
+      --zlg-border: #5eead4;
+
+      --s2-fg: #b45309;
+      --s2-bg: #fffbeb;
+      --s2-border: #fcd34d;
+
+      --danger-fg: #be123c;
+      --danger-bg: #fff1f2;
+      --danger-border: #fda4af;
+
+      --d-node: #475569;
+      --e-node: #2563eb;
+      --g-node: #d97706;
+
+      --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+      --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+      --shadow-lg: 0 12px 28px -6px rgba(15, 23, 42, 0.08), 0 4px 10px -3px rgba(15, 23, 42, 0.04);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #0b0f19;
+      --bg-subtle: #111827;
+      --surface: #131c2e;
+      --surface-elevated: #1a263d;
+      --surface-glass: rgba(19, 28, 46, 0.86);
+      --fg: #f8fafc;
+      --fg-secondary: #cbd5e1;
+      --muted: #94a3b8;
+      --border: #1e293b;
+      --border-strong: #334155;
+
+      --primary: #60a5fa;
+      --primary-hover: #93c5fd;
+      --primary-soft: rgba(59, 130, 246, 0.14);
+      --primary-border: rgba(96, 165, 250, 0.35);
+
+      --s1-fg: #93c5fd;
+      --s1-bg: rgba(37, 99, 235, 0.16);
+      --s1-border: rgba(96, 165, 250, 0.4);
+
+      --zlg-fg: #5eead4;
+      --zlg-bg: rgba(13, 148, 136, 0.16);
+      --zlg-border: rgba(45, 212, 191, 0.4);
+
+      --s2-fg: #fcd34d;
+      --s2-bg: rgba(217, 119, 6, 0.16);
+      --s2-border: rgba(251, 191, 36, 0.4);
+
+      --danger-fg: #fda4af;
+      --danger-bg: rgba(225, 29, 72, 0.16);
+      --danger-border: rgba(251, 113, 133, 0.4);
+
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 12px 28px -6px rgba(0, 0, 0, 0.5);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Sticky Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface-glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--fg);
+      text-decoration: none;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    @media (max-width: 1260px) {
+      .nav-brand-title { display: none; }
+    }
+    .nav-brand-badge {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      border: 1px solid var(--primary-border);
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nav-links::-webkit-scrollbar { display: none; }
+    .nav-links a {
+      color: var(--fg-secondary);
+      text-decoration: none;
+      font-size: 0.83rem;
+      font-weight: 500;
+      padding: 6px 9px;
+      border-radius: 6px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .nav-links a:hover {
+      color: var(--primary);
+      background: var(--bg-subtle);
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .theme-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--fg-secondary);
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      transition: all 0.15s ease;
+    }
+    .theme-btn:hover {
+      border-color: var(--border-strong);
+      color: var(--fg);
+    }
+
+    /* Container & Section Layout */
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    section {
+      padding: 56px 0;
+      border-bottom: 1px solid var(--border);
+      scroll-margin-top: 74px;
+    }
+    section:last-of-type { border-bottom: none; }
+
+    .section-header {
+      margin-bottom: 32px;
+    }
+    .section-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title {
+      font-size: clamp(1.5rem, 3vw, 2.05rem);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.25;
+      margin: 0 0 12px 0;
+      color: var(--fg);
+    }
+    .section-desc {
+      font-size: 1.02rem;
+      color: var(--fg-secondary);
+      max-width: 78ch;
+      margin: 0;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 64px 0 48px;
+      background: radial-gradient(ellipse 80% 50% at 50% -15%, var(--primary-soft), transparent);
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-inner {
+      text-align: center;
+      max-width: 1060px;
+      margin: 0 auto;
+    }
+    .venue-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      box-shadow: var(--shadow-sm);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--fg-secondary);
+      margin-bottom: 20px;
+    }
+    .venue-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-soft);
+    }
+    .hero h1 {
+      font-size: clamp(1.6rem, 2.7vw, 2.28rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.22;
+      margin: 0 0 18px;
+      color: var(--fg);
+    }
+    .hero h1 .gradient-text {
+      background: linear-gradient(135deg, var(--primary) 0%, #0d9488 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-authors {
+      font-size: 0.96rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+      font-family: var(--font-mono);
+      font-weight: 500;
+    }
+    .hero-tldr {
+      text-align: left;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--primary);
+      border-radius: var(--radius-md);
+      padding: 18px 22px;
+      box-shadow: var(--shadow-md);
+      margin: 0 auto 28px;
+      font-size: 0.96rem;
+      color: var(--fg-secondary);
+      line-height: 1.65;
+    }
+    .hero-tldr strong { color: var(--fg); }
+
+    /* Resource Buttons */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 40px;
+    }
+    .btn-row .btn {
+      padding: 8px 13px;
+      font-size: 0.83rem;
+      gap: 6px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 15px;
+      border-radius: 999px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: all 0.16s ease;
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+      color: var(--fg);
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .btn-primary {
+      background: var(--fg);
+      color: var(--surface);
+      border-color: var(--fg);
+    }
+    .btn-primary:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+    }
+    .btn-badge {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 2px 6px;
+      border-radius: 99px;
+      background: var(--bg-subtle);
+      color: var(--fg-secondary);
+    }
+
+    /* Metric Ribbon */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      text-align: left;
+    }
+    @media (max-width: 900px) { .metrics-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 520px) { .metrics-grid { grid-template-columns: 1fr; } }
+
+    .metric-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+    }
+    .metric-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--primary);
+    }
+    .metric-card.teal::before { background: #0d9488; }
+    .metric-card.amber::before { background: #d97706; }
+    .metric-card.indigo::before { background: #4f46e5; }
+
+    .metric-val {
+      font-family: var(--font-mono);
+      font-size: 1.52rem;
+      font-weight: 800;
+      color: var(--fg);
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 5px;
+      white-space: nowrap;
+    }
+    .metric-label {
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--fg);
+      margin-bottom: 4px;
+    }
+    .metric-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    /* Cards & Grids */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 920px) {
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 0;
+      color: var(--fg);
+    }
+
+    /* Badges & Pills */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .pill-s1 { background: var(--s1-bg); color: var(--s1-fg); border-color: var(--s1-border); }
+    .pill-zlg { background: var(--zlg-bg); color: var(--zlg-fg); border-color: var(--zlg-border); }
+    .pill-s2 { background: var(--s2-bg); color: var(--s2-fg); border-color: var(--s2-border); }
+    .pill-danger { background: var(--danger-bg); color: var(--danger-fg); border-color: var(--danger-border); }
+    .pill-neutral { background: var(--bg-subtle); color: var(--fg-secondary); border-color: var(--border-strong); }
+
+    /* Motivation Comparison */
+    .comp-card {
+      border-radius: var(--radius-md);
+      padding: 22px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .comp-card.ours {
+      border: 2px solid var(--primary);
+      box-shadow: var(--shadow-md);
+    }
+    .flow-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    @media (max-width: 560px) { .flow-steps { grid-template-columns: repeat(2, 1fr); } }
+    .flow-step {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      background: var(--bg-subtle);
+      text-align: center;
+      font-size: 0.8rem;
+    }
+    .flow-step .step-name {
+      font-weight: 600;
+      color: var(--fg);
+      margin-bottom: 6px;
+      display: block;
+      font-size: 0.78rem;
+    }
+    .executor-tag {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 6px;
+      border-radius: 5px;
+    }
+    .exec-llm { background: #ea580c; color: #fff; }
+    .exec-code { background: #64748b; color: #fff; }
+    .exec-s1 { background: #0d9488; color: #fff; }
+
+    /* Equation Box */
+    .eq-banner {
+      margin-top: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+    @media (max-width: 860px) { .eq-banner { grid-template-columns: 1fr; } }
+
+    /* Interactive SkillDP Explorer */
+    .explorer-shell {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+    .explorer-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      padding: 12px 16px;
+      background: var(--bg-subtle);
+      border-bottom: 1px solid var(--border);
+    }
+    @media (max-width: 860px) {
+      .explorer-tabs { grid-template-columns: 1fr; }
+    }
+    .exp-tab {
+      appearance: none;
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+      color: var(--fg-secondary);
+      padding: 9px 13px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      min-width: 0;
+      text-align: left;
+    }
+    .exp-tab > span:first-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .exp-tab:hover { border-color: var(--primary); color: var(--fg); }
+    .exp-tab.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+    .explorer-body {
+      padding: 24px;
+    }
+    .code-box {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      line-height: 1.6;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      white-space: pre-wrap;
+      overflow-x: auto;
+      color: var(--fg);
+    }
+    .quote-highlight {
+      background: rgba(250, 204, 21, 0.28);
+      border-bottom: 2px solid #eab308;
+      padding: 1px 3px;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+    .option-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .option-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 9px 12px;
+      font-size: 0.83rem;
+      background: var(--bg);
+      display: grid;
+      grid-template-columns: minmax(150px, 0.38fr) 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+    @media (max-width: 640px) { .option-item { grid-template-columns: 1fr; } }
+    .option-item.correct {
+      border-color: #0d9488;
+      background: var(--zlg-bg);
+    }
+    .option-name {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.78rem;
+      color: var(--fg);
+    }
+    .option-def { color: var(--fg-secondary); font-size: 0.8rem; }
+    .prob-bar-wrap {
+      width: 110px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+    .prob-track {
+      flex: 1;
+      height: 7px;
+      background: var(--border);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .prob-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 99px;
+    }
+    .option-item.correct .prob-fill { background: #0d9488; }
+
+    /* Interactive Gate Simulator */
+    .gate-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .gate-btn {
+      appearance: none;
+      border: 1px solid var(--border-strong);
+      background: var(--bg);
+      color: var(--fg-secondary);
+      padding: 8px 13px;
+      border-radius: 8px;
+      font-size: 0.81rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .gate-btn:hover { border-color: var(--primary); color: var(--fg); }
+    .gate-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .bench-sim-row {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .bench-sim-row:last-child { border-bottom: none; }
+    .bench-sim-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+      font-size: 0.84rem;
+    }
+    .cost-stack-track {
+      height: 18px;
+      background: var(--bg-subtle);
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      border: 1px solid var(--border);
+    }
+    .cost-seg-g { background: #f59e0b; transition: width 0.3s ease; }
+    .cost-seg-e { background: #3b82f6; transition: width 0.3s ease; }
+    .cost-seg-s1 { background: #14b8a6; transition: width 0.3s ease; }
+
+    /* Episode Replay Timeline */
+
+    /* Worked example (Section 6) */
+    .wx-card { padding: 0; overflow: hidden; }
+    .wx-goal { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
+      padding:14px 20px; background:var(--bg-subtle); border-bottom:1px solid var(--border); font-size:0.88rem; }
+    .wx-legend { display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-size:0.76rem; color:var(--muted); }
+    .wx-legend .wx-node { margin-left:8px; }
+    .wx-steps { padding: 6px 20px; }
+    .wx-step { display:grid; grid-template-columns:56px 1fr; gap:14px; padding:16px 0; border-bottom:1px dashed var(--border); }
+    .wx-step:last-child { border-bottom:none; }
+    .wx-idx { display:flex; flex-direction:column; align-items:center; gap:6px; }
+    .wx-num { font-family:var(--font-mono); font-size:0.75rem; font-weight:700; color:var(--muted); }
+    .wx-node { display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:7px;
+      font-family:var(--font-mono); font-weight:800; font-size:0.8rem; color:#fff; }
+    .wx-node-G { background: var(--g-node); }
+    .wx-node-E { background: var(--e-node); }
+    .wx-node-D { background: var(--d-node); }
+    .wx-head { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:8px; font-size:0.95rem; }
+    .wx-grid { display:grid; grid-template-columns: 1fr 1fr; gap:14px; }
+    .wx-grid > * { min-width:0; }
+    .wx-obs { font-size:0.76rem; margin:0; white-space:pre-wrap; }
+    .wx-text { font-size:0.85rem; color:var(--fg-secondary); display:flex; flex-direction:column; gap:6px; }
+    .wx-why { font-size:0.8rem; color:var(--muted); border-left:2px solid var(--border-strong); padding-left:10px; }
+    .wx-takeaway { padding:14px 20px; background:var(--zlg-bg); border-top:1px solid var(--zlg-border); color:var(--fg-secondary); font-size:0.85rem; }
+    @media (max-width: 820px) { .wx-grid { grid-template-columns: 1fr; } }
+    .timeline-steps {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 18px;
+    }
+    .tl-node {
+      flex: 1 1 0;
+      min-width: 155px;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s ease;
+    }
+    .tl-node:hover { border-color: var(--primary); }
+    .tl-node.active {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+      box-shadow: var(--shadow-sm);
+    }
+    .tl-step-idx {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .tl-step-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--fg);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Results Tabs & Tables */
+    .res-tabs {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      background: var(--bg-subtle);
+      padding: 5px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      margin-bottom: 22px;
+    }
+    .res-tab {
+      appearance: none;
+      border: none;
+      background: transparent;
+      color: var(--fg-secondary);
+      font-size: 0.84rem;
+      font-weight: 600;
+      padding: 8px 15px;
+      border-radius: 7px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .res-tab.active {
+      background: var(--surface);
+      color: var(--fg);
+      box-shadow: var(--shadow-sm);
+    }
+    .res-panel { display: none; }
+    .res-panel.active { display: block; }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      font-variant-numeric: tabular-nums;
+    }
+    table.data-table th, table.data-table td {
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    table.data-table th {
+      background: var(--bg-subtle);
+      font-weight: 700;
+      color: var(--fg-secondary);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    table.data-table tr.row-group td {
+      background: var(--bg-subtle);
+      font-weight: 700;
+      color: var(--fg);
+      font-size: 0.8rem;
+    }
+    table.data-table tr.highlight-row {
+      background: var(--zlg-bg);
+    }
+    .num-pos { color: var(--zlg-fg); font-weight: 700; }
+    .num-neg { color: var(--danger-fg); font-weight: 700; }
+
+    /* Paper Vector Figure Frame & Lightbox */
+    .motivation-split {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 22px;
+      align-items: stretch;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 960px) {
+      .motivation-split { grid-template-columns: 1fr; }
+    }
+    .deg-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      justify-content: space-between;
+    }
+    .paper-fig-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .motivation-split .paper-fig-card {
+      margin-bottom: 0;
+    }
+    .paper-fig-img-wrap {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius-sm);
+      padding: 8px;
+      text-align: center;
+      overflow: hidden;
+      cursor: zoom-in;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .paper-fig-img-wrap:hover {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-md);
+    }
+    .paper-fig-img-wrap img {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+    .paper-fig-caption {
+      margin-top: 12px;
+      font-size: 0.82rem;
+      color: var(--fg-secondary);
+      line-height: 1.55;
+    }
+    .fig-lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(15, 23, 42, 0.82);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      cursor: zoom-out;
+    }
+    .fig-lightbox.open { display: flex; }
+    .fig-lightbox-inner {
+      background: #ffffff;
+      border-radius: var(--radius-md);
+      padding: 18px;
+      max-width: min(1240px, 95vw);
+      max-height: 90vh;
+      overflow: auto;
+      box-shadow: var(--shadow-lg);
+    }
+    .fig-lightbox-inner img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Skill Compiler Playground (v2): annotated source <-> compiled D/E/G workflow */
+    .cp-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+    .cp-presets { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); flex-wrap: wrap; }
+    .cp-preset { appearance: none; border: 0; background: transparent; color: var(--fg-secondary); font: 600 0.8rem var(--font-sans); padding: 6px 14px; border-radius: 999px; cursor: pointer; }
+    .cp-preset:hover { color: var(--fg); }
+    .cp-preset.active { background: var(--fg); color: var(--bg); }
+    .cp-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.78rem; color: var(--muted); }
+    .cp-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .cp-dot { width: 18px; height: 18px; border-radius: 5px; display: inline-grid; place-items: center; font: 700 0.68rem var(--font-mono); color: #fff; flex: none; }
+    .cp-dot.t-D { background: var(--d-node); } .cp-dot.t-E { background: var(--e-node); } .cp-dot.t-G { background: var(--g-node); }
+    .cp-grid { display: grid; grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr); gap: 20px; align-items: start; }
+    @media (max-width: 920px) { .cp-grid { grid-template-columns: 1fr; } }
+    .cp-pane { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); overflow: hidden; }
+    .cp-pane-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+    .cp-pane-title { font-size: 0.86rem; font-weight: 700; color: var(--fg); }
+    .cp-pane-sub { font-size: 0.74rem; color: var(--muted); font-family: var(--font-mono); }
+    .cp-edit-btn { appearance: none; border: 1px solid var(--border-strong); background: var(--surface); color: var(--fg-secondary); font: 600 0.76rem var(--font-sans); padding: 5px 12px; border-radius: 6px; cursor: pointer; }
+    .cp-edit-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .cp-source { max-height: 560px; overflow: auto; padding: 10px 10px 12px; font-family: var(--font-mono); font-size: 0.76rem; line-height: 1.6; }
+    .cp-source .skill-editor { min-height: 520px; margin: 0; }
+    .cp-block { position: relative; padding: 6px 10px 6px 14px; margin: 2px 0; border-radius: 6px; border-left: 3px solid transparent; color: var(--fg-secondary); transition: background 0.15s ease; white-space: pre-wrap; word-break: break-word; }
+    .cp-block.meta { color: var(--muted); }
+    .cp-block.t-D { border-left-color: var(--d-node); }
+    .cp-block.t-E { border-left-color: var(--e-node); }
+    .cp-block.t-G { border-left-color: var(--g-node); }
+    .cp-block[data-id] { cursor: pointer; }
+    .cp-block.linked { background: var(--bg-subtle); }
+    .cp-block .cp-h { color: var(--fg); font-weight: 700; }
+    .cp-block code { background: var(--bg-subtle); border-radius: 4px; padding: 0 3px; }
+    .cp-tag { float: right; margin: 2px 0 2px 8px; font: 700 0.66rem var(--font-mono); padding: 1px 6px; border-radius: 4px; color: #fff; }
+    .cp-tag.t-D { background: var(--d-node); } .cp-tag.t-E { background: var(--e-node); } .cp-tag.t-G { background: var(--g-node); }
+    .cp-optname { color: var(--s1-fg); background: var(--s1-bg); border: 1px solid var(--s1-border); border-radius: 4px; padding: 0 4px; font-weight: 600; }
+    .cp-profile { padding: 12px 16px 14px; border-bottom: 1px solid var(--border); }
+    .cp-bar { display: flex; height: 8px; border-radius: 999px; overflow: hidden; background: var(--bg-subtle); margin-bottom: 8px; }
+    .cp-bar i { display: block; height: 100%; }
+    .cp-bar .t-D { background: var(--d-node); } .cp-bar .t-E { background: var(--e-node); } .cp-bar .t-G { background: var(--g-node); }
+    .cp-profile-text { font-size: 0.78rem; color: var(--fg-secondary); }
+    .cp-profile-text b { color: var(--fg); }
+    .cp-flow { list-style: none; margin: 0; padding: 14px 16px 6px; max-height: 560px; overflow: auto; }
+    @media (max-width: 920px) { .cp-flow, .cp-source { max-height: 460px; } .cp-presets { border-radius: 12px; } }
+    .cp-node { position: relative; display: grid; grid-template-columns: 26px 1fr; gap: 12px; padding-bottom: 14px; cursor: pointer; }
+    .cp-node::before { content: ""; position: absolute; left: 12px; top: 26px; bottom: 0; width: 2px; background: var(--border); }
+    .cp-node:last-child::before { display: none; }
+    .cp-node .cp-dot { width: 26px; height: 26px; border-radius: 7px; font-size: 0.78rem; position: relative; z-index: 1; }
+    .cp-card { border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; background: var(--surface); transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+    .cp-node.linked .cp-card { border-color: var(--border-strong); box-shadow: var(--shadow-md); }
+    .cp-node.t-E .cp-card { background: linear-gradient(0deg, var(--s1-bg), var(--s1-bg)) top / 100% 0 no-repeat, var(--surface); }
+    .cp-card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+    .cp-card-title { font-size: 0.86rem; font-weight: 700; color: var(--fg); }
+    .cp-card-id { font: 600 0.7rem var(--font-mono); color: var(--muted); }
+    .cp-exec { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+    .cp-exec b.t-D { color: var(--d-node); } .cp-exec b.t-E { color: var(--e-node); } .cp-exec b.t-G { color: var(--g-node); }
+    .cp-opts { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+    .cp-opt { font: 600 0.72rem var(--font-mono); padding: 2px 8px; border-radius: 999px; background: var(--s1-bg); color: var(--s1-fg); border: 1px solid var(--s1-border); }
+    .cp-opt.none { background: transparent; color: var(--muted); border-style: dashed; border-color: var(--border-strong); }
+    .cp-gate { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 8px; font-size: 0.74rem; color: var(--fg-secondary); }
+    .cp-gate .g-acc { color: var(--s1-fg); font-weight: 700; }
+    .cp-gate .g-def { color: var(--s2-fg); font-weight: 700; }
+    .cp-gate code { font-size: 0.72rem; background: var(--zlg-bg); color: var(--zlg-fg); border: 1px solid var(--zlg-border); border-radius: 4px; padding: 0 5px; }
+    .cp-detail { font-size: 0.76rem; color: var(--fg-secondary); margin-top: 6px; }
+    .cp-note { font-size: 0.76rem; color: var(--muted); margin-top: 12px; }
+    .cp-note code { font-size: 0.74rem; }
+    .cp-artifacts { margin-top: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); }
+    .cp-artifacts > summary { cursor: pointer; padding: 12px 16px; font-size: 0.86rem; font-weight: 700; color: var(--fg); list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .cp-artifacts > summary::-webkit-details-marker { display: none; }
+    .cp-artifacts > summary .cp-pane-sub::after { content: " ▸"; }
+    .cp-artifacts[open] > summary .cp-pane-sub::after { content: " ▾"; }
+    .cp-artifacts-body { padding: 0 16px 16px; }
+
+    /* Interactive Skill Compiler Playground (legacy grid) */
+    .compiler-grid {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+    @media (max-width: 920px) { .compiler-grid { grid-template-columns: 1fr; } }
+    .skill-editor {
+      width: 100%;
+      min-height: 310px;
+      resize: vertical;
+      font-family: var(--font-mono);
+      font-size: 0.79rem;
+      line-height: 1.58;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-strong);
+      background: var(--bg-subtle);
+      color: var(--fg);
+      outline: none;
+    }
+    .skill-editor:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-soft);
+    }
+    .code-tabs {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .code-tab-btn {
+      appearance: none;
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+      color: var(--fg-secondary);
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .code-tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    /* Footer */
+    footer {
+      padding: 40px 0 60px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Sticky Navigation -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="nav-brand">
+        <span class="nav-brand-badge">AnyS1</span>
+        <span class="nav-brand-title">Thinking Fast, Anywhere</span>
+      </a>
+      <nav class="nav-links" aria-label="Section navigation">
+        <a href="#motivation">Motivation</a>
+        <a href="#pipeline">Framework</a>
+        <a href="#compiler">Compiler</a>
+        <a href="#explorer">Any-DP</a>
+        <a href="#architecture">Simulator</a>
+        <a href="#example">Example</a>
+        <a href="#results">Results</a>
+        <a href="#citation">Quickstart</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="https://github.com/middle-chunjie/AnyS1" target="_blank" rel="noopener" class="btn" style="padding: 6px 12px; font-size: 0.79rem;">💻 GitHub</a>
+        <span class="btn" style="padding: 6px 12px; font-size: 0.79rem; opacity: 0.6; cursor: default;" title="Paper link will be added after release">📄 Paper (coming soon)</span>
+        <button class="theme-btn" id="themeToggle" title="Toggle light/dark theme" aria-label="Toggle theme">🌙</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <div class="venue-pill">
+          <span class="venue-dot"></span>
+          <span>AnyS1 · Skill-Grounded Dual-System LLM Agents</span>
+        </div>
+        <h1>
+          Thinking Fast, <span class="gradient-text">Anywhere</span>:<br>
+          One System-1 for the Decision Points of Any Agent Workflow
+        </h1>
+        <div class="hero-authors">
+          AnyS1 Framework &amp; Skill Compiler &nbsp;·&nbsp; Any-DP Dataset (1,072 Skills · 25,986 Consensus States) &nbsp;·&nbsp; Calibrated 4B System-1
+        </div>
+
+        <div class="hero-tldr">
+          <div style="margin-bottom: 8px; font-size: 0.93rem; color: var(--fg);">
+            <strong>TL;DR:</strong> Mine enumerable decision points from public <code>SKILL.md</code> files once, train a single calibrated 4B pointer <strong>System-1</strong> on 26K container-executed states (<strong>Any-DP</strong>), and execute any skill-guided workflow as a fast–slow dual system—cutting episode cost by <strong>30–44%</strong> and model-call time by <strong>38–48%</strong> without sacrificing task success.
+          </div>
+          <details style="font-size: 0.89rem; color: var(--fg-secondary); margin-top: 6px;">
+            <summary style="cursor: pointer; font-weight: 600; color: var(--primary); user-select: none;">Read Full Paper Abstract</summary>
+            <p style="margin: 10px 0 0; line-height: 1.65;">
+              Autonomous LLM agents excel at long-horizon tasks, yet querying a large model (<strong>System-2</strong>) at every step incurs high latency and cost—even though a large fraction of intermediate steps are merely bounded choices among known options. Existing dual-system agents offload such judgments to a lightweight decision model (<strong>System-1</strong>), but rely on decision points manually pre-defined for a single fixed workflow; meanwhile, general agents increasingly load procedural skills on demand whose instructions implicitly specify where to judge and among which options. We propose <strong>AnyS1</strong>, which mines grounded enumerable decision points across over 1,000 public skills and executes synthesized tasks in isolated containers to collect <strong>Any-DP</strong> (26K consensus-labeled execution states), training a single 4B pointer model with label smoothing so one System-1 serves unseen workflows. At run time, compiled workflows delegate an enumerable decision to System-1 in one forward pass when its confidence clears a threshold calibrated on unlabeled development runs (<strong>AnyS1<sub>warm</sub></strong>) or transferred zero-shot (<strong>AnyS1<sub>cold</sub></strong>), falling back to System-2 otherwise. Across three unseen benchmarks (SOPBench, ALFWorld, and WebShop) paired with <strong>DeepSeek-V4.1-Flash</strong> or <strong>GPT-6 Sol</strong> as System-2, AnyS1 preserves all-System-2 success while reducing episode cost by <strong>30–44%</strong> and model-call time by <strong>38–48%</strong> under AnyS1<sub>warm</sub>, and likewise maintains task reliability with zero target data under AnyS1<sub>cold</sub>.
+            </p>
+          </details>
+        </div>
+
+        <!-- Canonical Hugging Face Daily Paper Artifact Bar -->
+        <div class="btn-row">
+          <span class="btn" style="opacity: 0.6; cursor: default;" title="Paper link will be added after release">📄 Paper (coming soon)</span>
+          <a href="https://github.com/middle-chunjie/AnyS1" target="_blank" rel="noopener" class="btn">
+            <span>💻 Code &amp; CLI</span>
+            <span class="btn-badge">GitHub</span>
+          </a>
+          <a href="https://huggingface.co/datasets/middle-chunjie/SkillDP" target="_blank" rel="noopener" class="btn">
+            <span>🤗 Dataset (Any-DP)</span>
+            <span class="btn-badge">25,986 States</span>
+          </a>
+          <a href="https://huggingface.co/middle-chunjie/AnyS1-4B" target="_blank" rel="noopener" class="btn">
+            <span>🤗 Model (AnyS1-4B)</span>
+            <span class="btn-badge">4B Pointer</span>
+          </a>
+          <a href="#compiler" class="btn">
+            <span>⚡ Live Skill Compiler</span>
+            <span class="btn-badge">Interactive</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 4 Key Metric Cards -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-val">64.5% E-Nodes</div>
+          <div class="metric-label">17,865 Mined Decision Points</div>
+          <div class="metric-sub">Extracted across 1,072 public SkillMD-138K skills (16 categories); 100% of skills contain at least one enumerable judgment.</div>
+        </div>
+        <div class="metric-card teal">
+          <div class="metric-val">83.8% Dev Acc.</div>
+          <div class="metric-label">25,986 Consensus States (Any-DP)</div>
+          <div class="metric-sub">Container-executed trajectories outperform LLM-written synthetic states by +18.8 pts and cross-task real states by +7.0 pts.</div>
+        </div>
+        <div class="metric-card indigo">
+          <div class="metric-val">−30% to −44%</div>
+          <div class="metric-label">Episode Cost Reduction (AnyS1<sub>warm</sub>)</div>
+          <div class="metric-sub">Saves 38% avg (DeepSeek-V4.1-Flash) and 36% avg (GPT-6 Sol); AnyS1<sub>cold</sub> saves 29% / 31% avg with zero target runs.</div>
+        </div>
+        <div class="metric-card amber">
+          <div class="metric-val">55–81× Faster</div>
+          <div class="metric-label">22–32 ms Single-Pass System-1</div>
+          <div class="metric-sub">One forward pass on H100 (vs. 1.51–1.78 s for S2 and 0.65–0.67 s for 4-rotation Jev), cutting episode model time by 38–48%.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 1: Motivation & Problem Formulation -->
+  <section id="motivation">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">01 · Motivation &amp; Problem Formulation</div>
+        <h2 class="section-title">From Per-Workflow Manual Hooks to Skill-Mined Dual-System Execution</h2>
+        <p class="section-desc">
+          Prior dual-system agents hard-code System-1 hooks for a single fixed workflow. Because general agents load procedural skills (<code>SKILL.md</code>) on demand—whose branches implicitly state where to judge and among which options—AnyS1 mines decision points across skills once to serve unseen workflows.
+        </p>
+      </div>
+
+      <!-- Side-by-Side Split: Paper Figure 1 (Left) + D/E/G Node Taxonomy Stack (Right) -->
+      <div class="motivation-split">
+        <div class="paper-fig-card">
+          <div class="paper-fig-img-wrap" data-zoom-src="figures/fig_motivation.svg" title="Click to enlarge Figure 1">
+            <img src="figures/fig_motivation.svg" alt="Figure 1: From per-workflow hooks to skill-mined dual-system execution">
+          </div>
+          <div class="paper-fig-caption">
+            <strong>Figure 1 (🔍 Click to Zoom):</strong> <em>(a)</em> Prior dual-system agents engineer separate System-1 hooks per workflow. <em>(b)</em> <strong>AnyS1</strong> mines enumerable decisions across public skills once offline to train one general System-1 for unseen workflows.
+          </div>
+        </div>
+
+        <div class="deg-stack">
+          <div class="card" style="padding: 18px; flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px;">
+              <strong style="font-size:0.95rem;">D · Deterministic (21.3%)</strong>
+              <span class="pill pill-neutral">0 Tokens · Code</span>
+            </div>
+            <p style="font-size:0.84rem; color:var(--fg-secondary); margin:0; line-height:1.58;">
+              Steps fully determined by structured state—fixed tool calls, regex/file predicates, and state bookkeeping—execute directly as compiled Python code at zero token cost.
+            </p>
+          </div>
+
+          <div class="card" style="padding: 18px; flex: 1; border-color: var(--primary); background: linear-gradient(180deg, var(--surface) 0%, var(--s1-bg) 100%); display: flex; flex-direction: column; justify-content: center;">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px;">
+              <strong style="font-size:0.95rem;">E · Enumerable (64.5%)</strong>
+              <span class="pill pill-zlg">22–32 ms · AnyS1</span>
+            </div>
+            <p style="font-size:0.84rem; color:var(--fg-secondary); margin:0; line-height:1.58;">
+              Bounded choices over candidate sets $(q, O, d)$ fixed in the skill or enumerable from runtime state $s$: scored in a single forward pass by our calibrated 4B System-1 and gated against $\tau$ (100% of mined skills contain $\ge 1$ E-node).
+            </p>
+          </div>
+
+          <div class="card" style="padding: 18px; flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px;">
+              <strong style="font-size:0.95rem;">G · Generative (14.2%)</strong>
+              <span class="pill pill-s2">System-2 LLM</span>
+            </div>
+            <p style="font-size:0.84rem; color:var(--fg-secondary); margin:0; line-height:1.58;">
+              Open-ended synthesis, free-form code writing, search query formulation, and low-confidence fallbacks ($c(x) &lt; \tau$) are reserved for the frontier System-2 model.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cost Ceiling Equation Banner -->
+      <div class="eq-banner">
+        <div>
+          <div class="section-eyebrow" style="margin-bottom: 4px;">The Cost Ceiling Law (Equation 1)</div>
+          <h3 style="margin: 0 0 8px; font-size: 1.06rem;">Why Enumerable Cost Share ($s_E$) Governs Maximum Savings</h3>
+          <p style="margin: 0; font-size: 0.87rem; color: var(--fg-secondary);">
+            Splitting per-episode cost $C$ relative to an All-S2 baseline $C^{\mathrm{S2}}$ into System-2 generative turns ($C_G$), System-2 enumerable turns ($C_E$), and System-1 overhead ($\kappa$) reveals a structural ceiling: delegation can save at most $s_E - \kappa$.
+          </p>
+          <div style="margin-top: 12px; font-size: 0.94rem; overflow-x: auto;">
+            $$\frac{C}{C^{\mathrm{S2}}} \;=\; \underbrace{\frac{C_G}{C^{\mathrm{S2}}}}_{\approx\,1-s_E\text{ (untouched)}} \;+\; \underbrace{\frac{C_E}{C^{\mathrm{S2}}}}_{\le\, s_E\text{ (delegable)}} \;+\; \underbrace{\frac{C_{\mathrm{S1}}}{C^{\mathrm{S2}}}}_{\kappa\text{ (S1 overhead)}}$$
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 11px;">
+          <div style="font-family: var(--font-mono); font-size: 0.74rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">
+            All-S2 Enumerable Share ($s_E$) &amp; Resulting AnyS1 Cost / Time
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px; font-size:0.8rem; font-weight:600; margin-bottom:4px;">
+              <span>WebShop <span style="color:var(--muted); font-weight:500;">($s_E = 94\%$)</span></span>
+              <span style="font-family:var(--font-mono); font-size:0.76rem; color:var(--primary); white-space:nowrap;">42% sav warm · 54% sav cold · 0.59× time</span>
+            </div>
+            <div class="prob-track" style="height:9px;"><div class="prob-fill" style="width:94.0%;"></div></div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px; font-size:0.8rem; font-weight:600; margin-bottom:4px;">
+              <span>ALFWorld <span style="color:var(--muted); font-weight:500;">($s_E = 90\%$)</span></span>
+              <span style="font-family:var(--font-mono); font-size:0.76rem; color:var(--primary); white-space:nowrap;">39% sav warm · 24% sav cold · 0.61× time</span>
+            </div>
+            <div class="prob-track" style="height:9px;"><div class="prob-fill" style="width:90.0%;"></div></div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px; font-size:0.8rem; font-weight:600; margin-bottom:4px;">
+              <span>SOPBench <span style="color:var(--muted); font-weight:500;">($s_E = 28\%$)</span></span>
+              <span style="font-family:var(--font-mono); font-size:0.76rem; color:var(--s2-fg); white-space:nowrap;">35% sav warm · 8% sav cold · 0.62× time</span>
+            </div>
+            <div class="prob-track" style="height:9px;"><div class="prob-fill" style="width:28.0%; background:#f59e0b;"></div></div>
+          </div>
+          <div style="font-size: 0.79rem; color: var(--fg-secondary); background: var(--bg-subtle); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border);">
+            <strong>Compound Gain over Uncompiled Agents:</strong> Skill compilation cuts cost by <strong>4.2–7.3×</strong> (+18 avg pts); AnyS1<sub>warm</sub> removes <strong>30–44%</strong> of the remaining cost.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: Framework Pipeline (Final Single-Source Self-Execution Pipeline) -->
+  <section id="pipeline">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">02 · AnyS1 Framework Overview</div>
+        <h2 class="section-title">Single-Source Self-Execution Pipeline: From Public Skills to AnyS1</h2>
+        <p class="section-desc">
+          AnyS1 requires zero human annotations or third-party trajectory logs. Every decision point, executed trajectory state, and deferral threshold is derived from public <code>SKILL.md</code> repositories.
+        </p>
+      </div>
+
+      <!-- Paper Figure 2 (High-Res Vector SVG) -->
+      <div class="paper-fig-card">
+        <div class="paper-fig-img-wrap" data-zoom-src="figures/fig_framework.svg" title="Click to enlarge Figure 2">
+          <img src="figures/fig_framework.svg" alt="Figure 2: Overview of the four-stage AnyS1 pipeline">
+        </div>
+        <div class="paper-fig-caption">
+          <strong>Figure 2 (Click to Zoom):</strong> Four-stage <strong>AnyS1</strong> pipeline. <strong>Stage 1 (§3.2):</strong> Extract grounded D/E/G decision points across 1,072 public skills via $3\times$ independent passes and self-consistent merging ($\sigma(p)\ge 2$). <strong>Stage 2 (§3.2):</strong> Synthesize verifier-checked multi-stage container tasks with distractor skills, roll out OpenHands trajectories, and retain verbatim states with forward/reverse teacher consensus (<strong>Any-DP</strong>, 25,986 states). <strong>Stage 3 (§3.3):</strong> Train a 4B pointer model with permutation-equivariant <code>OptionInteractionHead</code> and label smoothing ($\epsilon=0.1$). <strong>Stage 4 (§3.3):</strong> Gate each runtime E-decision in one forward pass ($c(x)\ge\tau$) under <strong>AnyS1<sub>warm</sub></strong> or zero-shot <strong>AnyS1<sub>cold</sub></strong>.
+        </div>
+      </div>
+
+      <div class="grid-4">
+        <div class="card" style="padding: 18px;">
+          <div class="pill pill-s1" style="margin-bottom: 10px;">Stage 1 · §3.2</div>
+          <h3 class="card-title" style="font-size: 0.96rem; margin-bottom: 8px;">Extracting Decision Points</h3>
+          <p style="font-size: 0.83rem; color: var(--fg-secondary); margin: 0;">
+            Three independent LLM passes extract D/E/G decision points anchored to verbatim substring quotes from <code>SKILL.md</code>. Self-consistent merging retains E points with support $\sigma(p)\ge 2$ and writes a 1-sentence definition $d(o)$ per option.
+          </p>
+        </div>
+        <div class="card" style="padding: 18px;">
+          <div class="pill pill-zlg" style="margin-bottom: 10px;">Stage 2 · §3.2</div>
+          <h3 class="card-title" style="font-size: 0.96rem; margin-bottom: 8px;">Task &amp; State Synthesis</h3>
+          <p style="font-size: 0.83rem; color: var(--fg-secondary); margin: 0;">
+            Each skill is turned into verifier-validated multi-stage container tasks with 2 distractor skills. OpenHands executes verified tasks in isolated containers ($T=0, 0.7$); verbatim observation states are labeled by forward/reverse teacher consensus ($y^1 = y^2$).
+          </p>
+        </div>
+        <div class="card" style="padding: 18px;">
+          <div class="pill pill-s1" style="margin-bottom: 10px;">Stage 3 · §3.3</div>
+          <h3 class="card-title" style="font-size: 0.96rem; margin-bottom: 8px;">Architecture &amp; Calibration</h3>
+          <p style="font-size: 0.83rem; color: var(--fg-secondary); margin: 0;">
+            Built on <code>Qwen3.5-4B-Base</code> with rank-16 LoRA, a pointer scoring head with permutation-equivariant <code>OptionInteractionHead</code> (<code>oc</code>), and label smoothing ($\epsilon=0.1$) to prevent overconfidence on unseen skills.
+          </p>
+        </div>
+        <div class="card" style="padding: 18px;">
+          <div class="pill pill-s2" style="margin-bottom: 10px;">Stage 4 · §3.3</div>
+          <h3 class="card-title" style="font-size: 0.96rem; margin-bottom: 8px;">Calibrated Deferral Gate</h3>
+          <p style="font-size: 0.83rem; color: var(--fg-secondary); margin: 0;">
+            Accepts System-1 in one forward pass when $c(x) = \max_o p_f(o\mid x) \ge \tau$ (chosen for $\ge 95\%$ agreement). Cold-start <strong>AnyS1<sub>cold</sub></strong> transfers $\tau=0.918$ zero-shot; <strong>AnyS1<sub>warm</sub></strong> fits $\tau$ on 50 unlabeled development runs.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: Skill Compiler Playground (annotated SKILL.md <-> compiled D/E/G workflow) -->
+  <section id="compiler">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">03 · Interactive Skill Compiler Playground</div>
+        <h2 class="section-title">From a <code>SKILL.md</code> to a Dual-System Workflow</h2>
+        <p class="section-desc">
+          A skill already says where the agent must choose and which options apply. The compiler marks each step as
+          <strong>D</strong> (run as code), <strong>E</strong> (an enumerable choice that System-1 answers first), or
+          <strong>G</strong> (open generation left to System-2). Pick an example or edit the source; hover any step to see where it lands.
+        </p>
+      </div>
+
+      <div class="cp-toolbar">
+        <div class="cp-presets" id="cpPresets" role="tablist" aria-label="Example skills">
+          <button class="cp-preset active" data-preset="code_review" role="tab">Code review</button>
+          <button class="cp-preset" data-preset="frontend_ui" role="tab">Front-end audit</button>
+          <button class="cp-preset" data-preset="incident_sop" role="tab">Incident SOP</button>
+        </div>
+        <div class="cp-legend" aria-hidden="true">
+          <span><i class="cp-dot t-D">D</i>Code</span>
+          <span><i class="cp-dot t-E">E</i>System-1, gated</span>
+          <span><i class="cp-dot t-G">G</i>System-2</span>
+        </div>
+      </div>
+
+      <div class="cp-grid">
+        <div class="cp-pane">
+          <div class="cp-pane-head">
+            <div><div class="cp-pane-title">SKILL.md</div><div class="cp-pane-sub" id="cpSkillName">input</div></div>
+            <button class="cp-edit-btn" id="cpEditBtn" aria-pressed="false">✎ Edit</button>
+          </div>
+          <div class="cp-source">
+            <div id="cpSourceView"></div>
+            <textarea id="skillInput" class="skill-editor" spellcheck="false" aria-label="Editable SKILL.md markdown input" hidden></textarea>
+          </div>
+        </div>
+
+        <div class="cp-pane">
+          <div class="cp-pane-head">
+            <div><div class="cp-pane-title">Compiled workflow</div><div class="cp-pane-sub">one node per step, in execution order</div></div>
+            <span class="pill pill-zlg" title="Zero-shot threshold transferred from SkillDP">τ<sub>cold</sub> = 0.918</span>
+          </div>
+          <div class="cp-profile">
+            <div class="cp-bar" id="cpBar"></div>
+            <div class="cp-profile-text" id="cpProfile"></div>
+          </div>
+          <ol class="cp-flow" id="cpFlow"></ol>
+        </div>
+      </div>
+
+      <details class="cp-artifacts">
+        <summary>
+          <span>Generated files</span>
+          <span class="cp-pane-sub">decisions.json · SKILL.anys1.md · workflow.py</span>
+        </summary>
+        <div class="cp-artifacts-body">
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
+            <div class="code-tabs" id="compilerOutTabs">
+              <button class="code-tab-btn active" data-out="decisions">decisions.json</button>
+              <button class="code-tab-btn" data-out="mcp_skill">SKILL.anys1.md</button>
+              <button class="code-tab-btn" data-out="workflow_py">workflow.py</button>
+            </div>
+            <button class="btn" id="copyCompilerOutBtn" style="padding: 4px 10px; font-size: 0.74rem;">📋 Copy</button>
+          </div>
+          <pre class="code-box" id="compilerOutputBox" style="margin: 0; max-height: 360px; overflow: auto;"></pre>
+        </div>
+      </details>
+
+      <p class="cp-note">
+        This preview runs the offline structural parser in your browser (<code>anys1 compile SKILL.md --offline</code>). The full compiler
+        (<a href="https://github.com/middle-chunjie/AnyS1" target="_blank" rel="noopener" style="color: var(--primary);"><code>anys1 compile</code></a>)
+        extracts decision points with three grounded System-2 passes and merges them.
+      </p>
+    </div>
+  </section>
+
+  <!-- Section 4: Interactive Any-DP Explorer (Final Pipeline Only) -->
+  <section id="explorer">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">04 · Interactive Dataset Inspector</div>
+        <h2 class="section-title">Explore Any-DP: From Verbatim Skill Quotes to Executed Container States</h2>
+        <p class="section-desc">
+          Skills state <em>what</em> to decide, but not the runtime observations in which those decisions arise. Inspect real records from <strong>Any-DP</strong> below to see how each mined decision point is instantiated via a verifier-checked multi-stage container task, captured as a verbatim trajectory state, and scored by our calibrated 4B System-1.
+        </p>
+      </div>
+
+      <div class="explorer-shell">
+        <div class="explorer-tabs" id="skillTabs">
+          <button class="exp-tab active" data-skill="claude_config">
+            <span>⚙️ .claude/ Config Conventions</span>
+            <span class="pill pill-neutral">Agent Infra</span>
+          </button>
+          <button class="exp-tab" data-skill="add_translations">
+            <span>🌐 UI i18n Key Routing</span>
+            <span class="pill pill-neutral">Web Front-End</span>
+          </button>
+          <button class="exp-tab" data-skill="cost_tracker">
+            <span>📊 Real-Time API Cost Tracker</span>
+            <span class="pill pill-neutral">LLM Tooling</span>
+          </button>
+        </div>
+
+        <div class="explorer-body" id="explorerContent">
+          <!-- Populated dynamically by JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 5: Architecture (Pointer + OptionInteractionHead) & Interactive Gate Sandbox -->
+  <section id="architecture">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">05 · Calibrated System-1 &amp; Selective Deferral</div>
+        <h2 class="section-title">Single-Pass Calibrated Deferral &amp; Cross-Backbone Cost Simulator</h2>
+        <p class="section-desc">
+          A gate that accepts System-1's answer when its probability is high enough requires probabilities that reflect how likely the answer is to be right—even on skills and states the model has not seen. We bake calibration into training via label smoothing ($\epsilon = 0.1$) and evaluate both unlabeled development-run and zero-target-run gates across two frontier System-2 backbones.
+        </p>
+      </div>
+
+      <div class="grid-2">
+        <!-- Left: Calibrated Pointer + OptionInteractionHead & Gate Modes -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Single-Pass Scoring &amp; Threshold Calibration</h3>
+            <span class="pill pill-s1">1 Forward Pass · 22–32 ms</span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--fg-secondary); margin-top: 0;">
+            System-1 concatenates $(s, q, O, d(O))$ and scores all options in a single forward pass with a pointer head enhanced by a 1-layer no-position self-attention block (<code>OptionInteractionHead</code>, $d_p=256$):
+          </p>
+          <div style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 0.84rem; margin-bottom: 14px;">
+            $$\mathcal{L} = \sum_{(x,y)\in\mathcal{D}} \mathrm{CE}\big(p_f(\cdot\mid x),\,(1-\epsilon)e_y + \epsilon u_O\big), \quad g(x) = \mathbb{I}\big[\max_{o\in O} p_f(o\mid x) \ge \tau\big]$$
+          </div>
+          <ul style="font-size: 0.83rem; color: var(--fg-secondary); padding-left: 18px; margin-bottom: 18px;">
+            <li><strong>AnyS1<sub>warm</sub> (Unlabeled Dev-Run Calibration):</strong> Fits $\tau$ on 50 unlabeled development episodes where System-2 answers and System-1 only scores (0 human labels; $\tau = 0.61$ on SOPBench, $0.89$ on ALFWorld, $0.95$ on WebShop).</li>
+            <li><strong>AnyS1<sub>cold</sub> (Zero-Shot Transferred Threshold):</strong> Transfers a single $\tau = 0.918$ fitted on the 153 dev-split examples (uses zero target-workflow runs).</li>
+          </ul>
+
+          <!-- Interactive Perturbation Micro-Widget -->
+          <div style="border-top: 1px solid var(--border); padding-top: 14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+              <span style="font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">
+                Interactive Gate &amp; Calibration Diagnostic
+              </span>
+              <div style="display:flex; gap: 6px; flex-wrap: wrap;">
+                <button class="gate-btn active" id="pertBtnOrig" style="padding: 4px 10px; font-size: 0.75rem;">Label Smoothing (ε=0.1)</button>
+                <button class="gate-btn" id="pertBtnRot" style="padding: 4px 10px; font-size: 0.75rem;">Plain CE (ε=0 · Saturated)</button>
+                <button class="gate-btn" id="pertBtnDist" style="padding: 4px 10px; font-size: 0.75rem;">All-S1 (No Gate on Search)</button>
+              </div>
+            </div>
+            <div id="pertOutput" style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-size: 0.82rem;">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Interactive Gate & Cost Breakdown Simulator -->
+        <div class="card">
+          <div class="card-header" style="align-items: center; flex-wrap: nowrap;">
+            <h3 class="card-title" style="white-space: nowrap;">Cost &amp; Gate Simulator</h3>
+            <div class="code-tabs" id="backboneSwitch" style="flex-wrap: nowrap;" title="Switch System-2 LLM Backbone (same 4B System-1 checkpoint)">
+              <button class="code-tab-btn active" data-bb="ds">DeepSeek-Flash</button>
+              <button class="code-tab-btn" data-bb="sol">GPT-6 Sol</button>
+            </div>
+          </div>
+          <p style="font-size: 0.84rem; color: var(--fg-secondary); margin-top: 0;">
+            Pick a System-2 backbone and a configuration to compare episode cost (split into S2 G-nodes, deferred S2 E-nodes, and System-1 overhead) and task success against All-S2:
+          </p>
+
+          <div class="gate-controls" id="gateControls">
+            <button class="gate-btn" data-gate="all_s2">All-S2 (Reference)</button>
+            <button class="gate-btn active" data-gate="anys1_warm">AnyS1<sub>warm</sub></button>
+            <button class="gate-btn" data-gate="anys1_cold">AnyS1<sub>cold</sub></button>
+          </div>
+
+          <div id="gateSimBanner" style="padding: 10px 14px; border-radius: 8px; font-size: 0.82rem; margin-bottom: 14px; background: var(--zlg-bg); border: 1px solid var(--zlg-border); color: var(--zlg-fg);">
+            <!-- Populated by JS -->
+          </div>
+
+          <div id="gateSimBars">
+            <!-- Populated by JS -->
+          </div>
+
+          <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-top: 14px; font-size: 0.76rem; color: var(--muted); font-family: var(--font-mono);">
+            <span><span style="display:inline-block;width:10px;height:10px;background:#f59e0b;border-radius:2px;margin-right:5px;"></span>S2 at G-Nodes (Reasoning/Gen)</span>
+            <span><span style="display:inline-block;width:10px;height:10px;background:#3b82f6;border-radius:2px;margin-right:5px;"></span>S2 at E-Nodes (Deferred)</span>
+            <span><span style="display:inline-block;width:10px;height:10px;background:#14b8a6;border-radius:2px;margin-right:5px;"></span>System-1 Overhead</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 6: Worked Example (single ALFWorld episode) -->
+  <section id="example">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">06 · Worked Example</div>
+        <h2 class="section-title">One ALFWorld Episode Through AnyS1</h2>
+        <p class="section-desc">
+          A single episode covers every node type: System-2 handles open-ended generation, System-1 answers confident enumerable judgments in one forward pass, uncertain search is deferred back to System-2, and deterministic steps run as code.
+        </p>
+      </div>
+
+      <div class="card wx-card">
+        <div class="wx-goal">
+          <div><strong>Goal:</strong> “Put a clean mug in the coffee machine.”</div>
+          <div class="wx-legend">
+            <span class="wx-node wx-node-G">G</span> System-2 generation
+            <span class="wx-node wx-node-E">E</span> enumerable judgment (gated)
+            <span class="wx-node wx-node-D">D</span> deterministic code
+          </div>
+        </div>
+        <div class="wx-steps">
+          <div class="wx-step">
+            <div class="wx-idx"><span class="wx-num">1</span><span class="wx-node wx-node-G">G</span></div>
+            <div class="wx-body">
+              <div class="wx-head"><strong>Parse the household goal</strong><span class="pill pill-s2">G · System-2</span></div>
+              <div class="wx-grid">
+                <div class="code-box wx-obs">Task: Put a clean mug in the coffeemachine.
+Visible: countertop 1, cabinet 1–4, fridge 1, microwave 1, sinkbasin 1, coffeemachine 1.</div>
+                <div class="wx-text">
+                  <div>System-2 decomposes the goal: object = <code>mug</code>, must be <code>clean</code> (wash at sinkbasin 1), destination = <code>coffeemachine 1</code>.</div>
+                  <div class="wx-why">Open-ended generation (G-node) always stays with System-2.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="wx-step">
+            <div class="wx-idx"><span class="wx-num">2</span><span class="wx-node wx-node-E">E</span></div>
+            <div class="wx-body">
+              <div class="wx-head"><strong>Where should we search first?</strong><span class="pill pill-s2">E · deferred → S2</span></div>
+              <div class="wx-grid">
+                <div class="code-box wx-obs">Unvisited receptacles: countertop 1, cabinet 1–4, shelf 1, drawer 1, fridge 1, garbagecan 1 (9 options + none).</div>
+                <div class="wx-text">
+                  <div>System-1 confidence $c(x)=0.41 &lt; \tau=0.89$ → <strong>deferred</strong>; System-2 picks <code>countertop 1</code>.</div>
+                  <div class="wx-why">In an unseen room several receptacles are plausible, so confidence stays low. Without the gate (All-S1), ALFWorld success drops from 96.3% to 40.3%, and 71 of 77 losses diverge at a search node.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="wx-step">
+            <div class="wx-idx"><span class="wx-num">3</span><span class="wx-node wx-node-E">E</span></div>
+            <div class="wx-body">
+              <div class="wx-head"><strong>Is the target object visible?</strong><span class="pill pill-zlg">E · accepted by S1 (24 ms)</span></div>
+              <div class="wx-grid">
+                <div class="code-box wx-obs">go to countertop 1 → You see a butterknife 1, a mug 2, a peppermill 1, and a toaster 1.</div>
+                <div class="wx-text">
+                  <div>System-1 answers <code>yes — mug 2 is present</code> with $c(x)=0.96 \ge \tau$ in one 24 ms forward pass.</div>
+                  <div class="wx-why">Replaces a 1.51 s System-2 call; AnyS1<sub>warm</sub> delegates 96% of such visible-object checks at 99.5% agreement with System-2.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="wx-step">
+            <div class="wx-idx"><span class="wx-num">4</span><span class="wx-node wx-node-D">D</span></div>
+            <div class="wx-body">
+              <div class="wx-head"><strong>Pick up, go to the sink, clean</strong><span class="pill pill-neutral">D · deterministic code</span></div>
+              <div class="wx-grid">
+                <div class="code-box wx-obs">Bound: target_item = mug 2, modifier = clean (false).</div>
+                <div class="wx-text">
+                  <div>Runs <code>take mug 2</code> → <code>go to sinkbasin 1</code> → <code>clean mug 2</code> as compiled code.</div>
+                  <div class="wx-why">0 LLM tokens, 0 model latency.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="wx-step">
+            <div class="wx-idx"><span class="wx-num">5</span><span class="wx-node wx-node-E">E</span></div>
+            <div class="wx-body">
+              <div class="wx-head"><strong>Is the precondition satisfied?</strong><span class="pill pill-zlg">E · accepted by S1 (24 ms)</span></div>
+              <div class="wx-grid">
+                <div class="code-box wx-obs">You clean the mug 2 using the sinkbasin 1. Inventory: mug 2 (clean).</div>
+                <div class="wx-text">
+                  <div>System-1 answers <code>yes — proceed to placement</code> ($c(x)=0.97$); the mug is placed and the episode succeeds.</div>
+                  <div class="wx-why">Same outcome as All-S2.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="wx-takeaway">
+          <strong>Benchmark-level effect (ALFWorld, DeepSeek-V4.1-Flash, AnyS1<sub>warm</sub>):</strong> 51% of E-decisions delegated, episode cost reduced by 39% (0.61×) and model time to 0.61× of All-S2 (12.9 s vs. 21.3 s), success 95.5% vs. 96.3% (1 game lost).
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 6: Experimental Results & Deep-Dive Analysis -->
+  <section id="results">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">07 · Empirical Evaluation (RQ1 – RQ4)</div>
+        <h2 class="section-title">Online Dual-System Results, Scaling &amp; Gate Ablation, Latency, and Decision Analysis</h2>
+        <p class="section-desc">
+          All dual-system configurations use our 4B System-1 trained exclusively on <strong>Any-DP</strong> (1,072 skills, 25,986 states) and are paired with <code>All-S2</code> via a shared request cache so that runs differ strictly where System-1 answers.
+        </p>
+      </div>
+
+      <div class="res-tabs" id="resTabs">
+        <button class="res-tab active" data-panel="tab-online">RQ1 · Main Online Results</button>
+        <button class="res-tab" data-panel="tab-ablations">RQ2 · Scaling &amp; Gate Ablations</button>
+        <button class="res-tab" data-panel="tab-latency">RQ3 · Cost Ceiling &amp; Latency</button>
+        <button class="res-tab" data-panel="tab-dataset">RQ4 · Decision &amp; Dataset Analysis</button>
+      </div>
+
+      <!-- Panel 1: RQ1 Online Main Table -->
+      <div class="res-panel active" id="tab-online">
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Configuration</th>
+                <th>SOP Pass</th>
+                <th>SOP Sav. %</th>
+                <th>SOP Time (s)</th>
+                <th>ALF SR</th>
+                <th>ALF Sav. %</th>
+                <th>ALF Time (s)</th>
+                <th>WS Score</th>
+                <th>WS SR</th>
+                <th>WS Sav. %</th>
+                <th>WS Time (s)</th>
+                <th>Avg Δ pt</th>
+                <th>Avg Sav. %</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="row-group">
+                <td colspan="13">System-2: DeepSeek-V4.1-Flash (Single-System Agent, Compiled Reference, and Dual-System AnyS1)</td>
+              </tr>
+              <tr>
+                <td><strong>System-2 Agent with Skills</strong> (Uncompiled)</td>
+                <td><span class="num-neg">55.2</span></td>
+                <td>7.3×</td>
+                <td>51.4</td>
+                <td><span class="num-neg">82.8</span></td>
+                <td>5.2×</td>
+                <td>163</td>
+                <td><span class="num-neg">54.9</span></td>
+                <td>34.4</td>
+                <td>4.2×</td>
+                <td>146</td>
+                <td><span class="num-neg">−17.8</span></td>
+                <td>5.6×</td>
+              </tr>
+              <tr>
+                <td><strong>Compiled Workflow (All-S2)</strong></td>
+                <td>83.2</td>
+                <td>—</td>
+                <td>25.0</td>
+                <td><strong>96.3</strong></td>
+                <td>—</td>
+                <td>21.3</td>
+                <td>66.9</td>
+                <td>38.0</td>
+                <td>—</td>
+                <td>29.0</td>
+                <td>—</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><strong>Jev as System-1</strong><sup>†</sup> (<code>jev-1.14.0</code> API)</td>
+                <td>84.0</td>
+                <td>2%</td>
+                <td>23.9</td>
+                <td><strong>96.3</strong></td>
+                <td>15%</td>
+                <td>20.5</td>
+                <td>67.1</td>
+                <td>38.6</td>
+                <td>28%</td>
+                <td>17.3</td>
+                <td>+0.3</td>
+                <td>15%</td>
+              </tr>
+              <tr class="highlight-row">
+                <td><strong>AnyS1<sub>warm</sub></strong> (50 unlabeled dev runs)</td>
+                <td><strong>84.3</strong></td>
+                <td><strong>35%</strong></td>
+                <td><strong>15.6</strong></td>
+                <td>95.5</td>
+                <td><strong>39%</strong></td>
+                <td><strong>12.9</strong></td>
+                <td><span class="num-pos">68.1*</span></td>
+                <td><strong>38.8</strong></td>
+                <td>42%</td>
+                <td>17.1</td>
+                <td><span class="num-pos">+0.5</span></td>
+                <td><strong>38%</strong></td>
+              </tr>
+              <tr class="highlight-row">
+                <td><strong>AnyS1<sub>cold</sub></strong> (transferred $\tau=0.918$, 0 runs)</td>
+                <td>83.2</td>
+                <td>8%</td>
+                <td>21.2</td>
+                <td>95.5</td>
+                <td>24%</td>
+                <td>15.7</td>
+                <td>67.9</td>
+                <td>38.0</td>
+                <td><strong>54%</strong></td>
+                <td><strong>12.7</strong></td>
+                <td>+0.1</td>
+                <td>29%</td>
+              </tr>
+              <tr class="row-group">
+                <td colspan="13">System-2: GPT-6 Sol (Same 4B System-1 Trained Only on Any-DP, Paired with a Stronger Unseen System-2)</td>
+              </tr>
+              <tr>
+                <td><strong>System-2 Agent with Skills</strong> (Uncompiled)</td>
+                <td><span class="num-neg">61.2</span></td>
+                <td>7.4×</td>
+                <td>—</td>
+                <td><span class="num-neg">88.8</span></td>
+                <td>2.3×</td>
+                <td>—</td>
+                <td><span class="num-neg">48.5</span></td>
+                <td>33.6</td>
+                <td>3.6×</td>
+                <td>—</td>
+                <td><span class="num-neg">−16.8</span></td>
+                <td>4.4×</td>
+              </tr>
+              <tr>
+                <td><strong>Compiled Workflow (All-S2)</strong></td>
+                <td>82.1</td>
+                <td>—</td>
+                <td>124</td>
+                <td><strong>96.3</strong></td>
+                <td>—</td>
+                <td>193</td>
+                <td><strong>70.6</strong></td>
+                <td><strong>41.8</strong></td>
+                <td>—</td>
+                <td>81.4</td>
+                <td>—</td>
+                <td>—</td>
+              </tr>
+              <tr class="highlight-row">
+                <td><strong>AnyS1<sub>warm</sub></strong> (50 Sol dev episodes)</td>
+                <td><strong>82.5</strong></td>
+                <td><strong>35%</strong></td>
+                <td><strong>75.8</strong></td>
+                <td>95.5</td>
+                <td><strong>44%</strong></td>
+                <td><strong>101</strong></td>
+                <td>70.4</td>
+                <td>40.0</td>
+                <td>30%</td>
+                <td>49.4</td>
+                <td>−0.2</td>
+                <td><strong>36%</strong></td>
+              </tr>
+              <tr class="highlight-row">
+                <td><strong>AnyS1<sub>cold</sub></strong> (unchanged transferred $\tau=0.918$)</td>
+                <td><strong>82.5</strong></td>
+                <td>14%</td>
+                <td>107</td>
+                <td>94.0</td>
+                <td>29%</td>
+                <td>134</td>
+                <td>70.1</td>
+                <td>40.4</td>
+                <td><strong>49%</strong></td>
+                <td><strong>33.3</strong></td>
+                <td>−0.8</td>
+                <td>31%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--muted); margin-top: 10px;">
+          <strong>Note:</strong> $^*$ indicates that the 95% paired bootstrap CI of the difference from <code>All-S2</code> excludes 0. <strong>Sav. %</strong> reports episode cost savings (%) relative to <code>All-S2</code> (<code>System-2 + System-1</code>, with self-hosted 4B System-1 priced at L4 GPU serving cost <code>$0.0045/1k</code> decisions and Jev at <code>$0.042/1M</code> input tokens; uncompiled System-2 rows show cost multiples). <strong>Time (s)</strong> reports critical-path model-call seconds per episode. Under both <strong>DeepSeek-V4.1-Flash</strong> and <strong>GPT-6 Sol</strong>, <strong>AnyS1<sub>warm</sub></strong> preserves success (raising WebShop score by <strong>+1.3*</strong> CI under Flash) while reducing episode cost by <strong>30–44%</strong> (mean <strong>38%</strong> / <strong>36%</strong>) and model-call time by <strong>38–48%</strong>.
+        </p>
+      </div>
+
+      <!-- Panel 2: RQ2 SkillDP Scaling, Calibration & Gate Ablation -->
+      <div class="res-panel" id="tab-ablations">
+        <div class="grid-3" style="margin-bottom: 20px;">
+          <div class="card">
+            <span class="pill pill-zlg" style="margin-bottom: 8px;">RQ2 · Executed vs. Third-Party States</span>
+            <h3 class="card-title" style="margin-bottom: 8px;">Self-Executed Any-DP Beats Cross-Task Real Training (+7.0 Pts)</h3>
+            <p style="font-size: 0.83rem; color: var(--fg-secondary); margin: 0;">
+              On held-out public container <code>Dev</code> states, our 4B System-1 trained solely on <strong>Any-DP</strong> reaches <strong>83.8%</strong> accuracy (3-seed mean), beating the same model trained on 6,118 cross-task real trajectory states (<strong>76.8%</strong>, <strong>+7.0</strong>) and LLM-written synthetic states (<strong>65.0%</strong>, <strong>+18.8</strong>), while reaching <strong>93.5%</strong> vs. 89.8% on SOPBench E-decisions.
+            </p>
+          </div>
+          <div class="card">
+            <span class="pill pill-s1" style="margin-bottom: 8px;">RQ2 · Why Label Smoothing Matters</span>
+            <h3 class="card-title" style="margin-bottom: 8px;">Label Smoothing ($\epsilon=0.1$) Keeps Confidence Transferable</h3>
+            <p style="font-size: 0.83rem; color: var(--fg-secondary); margin: 0;">
+              Without label smoothing, plain cross-entropy keeps accuracy unchanged (82.3% vs. 82.4%) but puts probability $\ge 0.90$ on <strong>88–93%</strong> of decisions instead of <strong>44–76%</strong>. The dev threshold $\tau$ jumps from <strong>0.904 to 0.998</strong> and fails on ALFWorld: delegating 70% of E-decisions at only <strong>83.0% agreement</strong>, versus <strong>98.4% agreement</strong> with label smoothing.
+            </p>
+          </div>
+          <div class="card">
+            <span class="pill pill-danger" style="margin-bottom: 8px;">RQ2 · Why the Gate Matters</span>
+            <h3 class="card-title" style="margin-bottom: 8px;">Without Deferral (<code>All-S1</code>), ALFWorld Collapses to 40.3%</h3>
+            <p style="font-size: 0.83rem; color: var(--fg-secondary); margin: 0;">
+              When System-1 answers every E decision without a gate (<code>All-S1</code>), SOPBench is $+1.1$ at $0.63\times$ and WebShop is $-0.5$ score points at $0.10\times$, but ALFWorld collapses from <strong>96.3% to 40.3%</strong> (75 games lost, 0 won; 71/77 losses diverge at a search node). Either <strong>AnyS1<sub>warm</sub></strong> or <strong>AnyS1<sub>cold</sub></strong> loses only <strong>1 game (95.5%)</strong>.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Decision-Level Model (3 Seeds Each)</th>
+                  <th>Dev (Held-Out)</th>
+                  <th>SOP E (%)</th>
+                  <th>ALF E (%)</th>
+                  <th>ALF Search (%)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="row-group"><td colspan="5">Zero-Shot &amp; Commercial Baselines</td></tr>
+                <tr><td><strong>Kev-4B</strong> (Zero-Shot)</td><td>57.8</td><td>88.7</td><td>56.9</td><td>16.3</td></tr>
+                <tr><td><strong>AgentDecision-4B</strong></td><td>74.6</td><td>88.2</td><td>69.5</td><td>40.4</td></tr>
+                <tr><td><strong>Qwen3.5-4B</strong> (Zero-Shot)</td><td>71.4</td><td>91.7</td><td>70.9</td><td>44.0</td></tr>
+                <tr><td><strong>Qwen3.5-27B</strong> (Zero-Shot)</td><td>85.9</td><td>93.8</td><td>77.2</td><td>56.8</td></tr>
+                <tr><td><strong>Jev</strong> (Commercial API)</td><td>78.4</td><td><strong>95.5</strong></td><td><strong>81.2</strong></td><td><strong>66.4</strong></td></tr>
+                <tr class="row-group"><td colspan="5">Fine-Tuned on Alternative Supervision (4B-Base)</td></tr>
+                <tr><td><strong>LLM-Written Synthetic (S1-syn)</strong></td><td>65.0</td><td>91.7</td><td>63.6</td><td>28.6</td></tr>
+                <tr><td><strong>Cross-Task Real States Only</strong> (6,118 states)</td><td>76.8</td><td>89.8</td><td>69.6</td><td>42.5</td></tr>
+                <tr class="row-group"><td colspan="5">Fine-Tuned on Any-DP (Ours · Self-Executed States Only)</td></tr>
+                <tr><td><strong>Any-DP · 25% of Skills</strong> (268 skills)</td><td>80.7</td><td>92.1</td><td>69.7</td><td>40.7</td></tr>
+                <tr><td><strong>Any-DP · 50% of Skills</strong> (537 skills)</td><td><strong>84.7</strong></td><td>93.0</td><td>68.3</td><td>37.6</td></tr>
+                <tr><td><strong>Any-DP · 100%, Standard Pointer Head</strong></td><td>82.7</td><td>93.7</td><td>68.0</td><td>37.8</td></tr>
+                <tr class="highlight-row">
+                  <td><strong>Any-DP · 100%, Option-Interaction Head (AnyS1 S1)</strong></td>
+                  <td><strong>83.8</strong></td>
+                  <td>93.5</td>
+                  <td>68.9</td>
+                  <td>41.5</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Gate &amp; Calibration Ablation</th>
+                  <th>SOPBench Pass / Cost</th>
+                  <th>ALFWorld SR / Cost</th>
+                  <th>WebShop Sc. / Cost</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="row-group"><td colspan="4">Online Deferral Gate Ablation (Same 4B System-1)</td></tr>
+                <tr>
+                  <td><strong>All-S2</strong> (0% delegated)</td>
+                  <td>83.2% / 1.00×</td>
+                  <td>96.3% / 1.00×</td>
+                  <td>66.9 / 1.00×</td>
+                </tr>
+                <tr>
+                  <td><strong>All-S1</strong> (No gate · 100% delegated)</td>
+                  <td><strong>84.3%</strong> (+1.1) / 0.63×</td>
+                  <td><span class="num-neg">40.3% (-56.0*)</span> / 0.22×</td>
+                  <td>66.3 (-0.5) / 0.10×</td>
+                </tr>
+                <tr class="highlight-row">
+                  <td><strong>AnyS1<sub>cold</sub></strong> (Transferred $\tau=0.918$)</td>
+                  <td><strong>83.2% (0.0) / 0.92×</strong></td>
+                  <td><strong>95.5% (-0.7) / 0.76×</strong></td>
+                  <td><strong>67.9 (+1.0) / 0.46×</strong></td>
+                </tr>
+                <tr class="highlight-row">
+                  <td><strong>AnyS1<sub>warm</sub></strong> (50 S2 dev runs)</td>
+                  <td><strong>84.3% (+1.1) / 0.65×</strong></td>
+                  <td><strong>95.5% (-0.7) / 0.61×</strong></td>
+                  <td><strong>68.1 (+1.3*) / 0.58×</strong></td>
+                </tr>
+                <tr class="row-group"><td colspan="4">Offline Calibration Objective Study (Transfer to SOPBench &amp; ALFWorld)</td></tr>
+                <tr class="highlight-row">
+                  <td><strong>Label Smoothing ($\epsilon=0.1$, Ours)</strong></td>
+                  <td>ECE <strong>0.094</strong> · $\tau=0.904$</td>
+                  <td>SOP: 67% del / <strong>98.4%</strong> agr</td>
+                  <td>ALF: 42% del / <strong>98.4%</strong> agr</td>
+                </tr>
+                <tr>
+                  <td><strong>Plain Cross-Entropy ($\epsilon=0$)</strong></td>
+                  <td>ECE 0.146 · $\tau=0.998$</td>
+                  <td>SOP: 81% del / 98.5% agr</td>
+                  <td>ALF: 70% del / <span class="num-neg">83.0% agr</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Cross-Entropy + Brier Loss</strong></td>
+                  <td>ECE 0.148 · $\tau=0.996$</td>
+                  <td>SOP: 83% del / 97.8% agr</td>
+                  <td>ALF: 67% del / <span class="num-neg">86.7% agr</span></td>
+                </tr>
+              </tbody>
+            </table>
+            <div style="padding: 12px 14px; font-size: 0.79rem; color: var(--muted); border-top: 1px solid var(--border);">
+              <strong>Takeaway:</strong> Both ingredients are essential: (1) without a gate (<code>All-S1</code>), open-world ALFWorld search decisions collapse success from 96.3% to 40.3%; (2) without label smoothing ($\epsilon=0.1$), probability saturation ($\tau \to 0.998$) causes transferred thresholds to fail on ALFWorld (83.0% vs. 98.4% agreement).
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 3: RQ3 Cost Ceiling & Latency Breakdown -->
+      <div class="res-panel" id="tab-latency">
+        <!-- Paper Figure 3 (High-Res Vector SVG) -->
+        <div class="paper-fig-card">
+          <div class="paper-fig-img-wrap" data-zoom-src="figures/fig_cost.svg" title="Click to enlarge Figure 3">
+            <img src="figures/fig_cost.svg" alt="Figure 3: Per-episode cost relative to All-S2 decomposed into G-nodes, E-nodes, and System-1 overhead">
+          </div>
+          <div class="paper-fig-caption">
+            <strong>Figure 3 (Click to Zoom):</strong> Per-episode cost relative to <code>All-S2</code> ($1.00\times$), split into System-2 at G-nodes, System-2 at E-nodes, and System-1 inference overhead across SOPBench, ALFWorld, and WebShop (Equation 1 decomposition).
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Table 4 · Per-Decision &amp; Episode Critical-Path Latency</h3>
+              <span class="pill pill-zlg">55–81× Faster Decisions</span>
+            </div>
+            <p style="font-size: 0.83rem; color: var(--fg-secondary); margin-top: 0;">
+              System-1 latency is measured at batch size 1 on a single H100 GPU (<code>bf16</code>) over logged development E-states; System-2 and Jev latencies come from the online evaluation logs:
+            </p>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Latency Metric</th>
+                    <th>SOPBench</th>
+                    <th>ALFWorld</th>
+                    <th>WebShop</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="row-group"><td colspan="4">Seconds per Decision (Median, Batch Size 1)</td></tr>
+                  <tr>
+                    <td><strong>System-2</strong> (LLM E-Node Call)</td>
+                    <td>1.78 s</td>
+                    <td>1.51 s</td>
+                    <td>1.77 s</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Jev API</strong> (4 Rotations)</td>
+                    <td>—</td>
+                    <td>0.65 s</td>
+                    <td>0.67 s</td>
+                  </tr>
+                  <tr class="highlight-row">
+                    <td><strong>System-1 (AnyS1 · 1 Forward Pass)</strong></td>
+                    <td><strong>0.022 s (22 ms)</strong></td>
+                    <td><strong>0.024 s (24 ms)</strong></td>
+                    <td><strong>0.032 s (32 ms)</strong></td>
+                  </tr>
+                  <tr class="row-group"><td colspan="4">Critical-Path Model-Call Time per Episode</td></tr>
+                  <tr>
+                    <td><strong>All-S2</strong> (Baseline Episode Model Time)</td>
+                    <td>25.0 s (1.00×)</td>
+                    <td>21.3 s (1.00×)</td>
+                    <td>29.0 s (1.00×)</td>
+                  </tr>
+                  <tr class="highlight-row">
+                    <td><strong>AnyS1<sub>warm</sub></strong> (Single-Pass Calibrated Gate)</td>
+                    <td><strong>15.6 s (0.62×)</strong></td>
+                    <td><strong>12.9 s (0.61×)</strong></td>
+                    <td><strong>17.1 s (0.59×)</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Where the Savings Come From: E-Share Ceiling &amp; S1 Overhead</h3>
+              <span class="pill pill-s1">Equation 1 Decomposition</span>
+            </div>
+            <p style="font-size: 0.83rem; color: var(--fg-secondary); margin-top: 0;">
+              Both dollar savings and wall-clock speedups follow the structural ceiling $s_E$ (the fraction of <code>All-S2</code> cost spent on E-nodes):
+            </p>
+            <ul style="font-size: 0.83rem; color: var(--fg-secondary); padding-left: 18px; line-height: 1.7;">
+              <li><strong>WebShop ($s_E = 94\%$):</strong> System-2 does little besides answer E-nodes. Delegating 44% of E-decisions under <strong>AnyS1<sub>warm</sub></strong> cuts cost by <strong>42% (0.58×)</strong> and critical-path model time from <strong>29.0 s → 17.1 s (0.59×)</strong>; <strong>AnyS1<sub>cold</sub></strong> delegates 58% to cut cost by <strong>54% (0.46×)</strong>.</li>
+              <li><strong>ALFWorld ($s_E = 90\%$):</strong> <strong>AnyS1<sub>warm</sub></strong> delegates 51% of E-decisions (deferring room search nodes), cutting cost by <strong>39% (0.61×)</strong> and model-call time from <strong>21.3 s → 12.9 s (0.61×)</strong>.</li>
+              <li><strong>SOPBench ($s_E = 28\%$):</strong> Reasoning G-nodes (multi-turn dialogue and tool argument generation) account for 72% of All-S2 cost. <strong>AnyS1<sub>warm</sub></strong> delegates 99% of E-nodes to cut cost by <strong>35% (0.65× cost, 0.62× time)</strong>, slightly aided by shorter turns on delegated runs.</li>
+              <li><strong>Negligible System-1 Overhead:</strong> Under L4 serving (<code>$0.0045/1k</code> decisions), System-1 adds $\kappa \le 2.1\%$ of baseline cost and only <strong>22–32 ms</strong> per call (55–81× faster than System-2).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 4: RQ4 Delegation by Decision Kind & Any-DP Stats -->
+      <div class="res-panel" id="tab-dataset">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Table 5 · RQ4: Online Delegation &amp; Agreement by Decision Kind</h3>
+              <span class="pill pill-zlg">AnyS1<sub>warm</sub> Breakdown</span>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Bench</th>
+                    <th>Decision Kind</th>
+                    <th>Share</th>
+                    <th>Delegated</th>
+                    <th>Agree w/ S2</th>
+                    <th>Episodes Lost / Won</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="highlight-row"><td><strong>SOP</strong></td><td>Intent (12–22 options)</td><td>31%</td><td><strong>99%</strong></td><td><strong>97.7%</strong></td><td>0 / 1</td></tr>
+                  <tr class="highlight-row"><td><strong>SOP</strong></td><td>Slot value ($\le 7$ options)</td><td>21%</td><td><strong>100%</strong></td><td><strong>99.5%</strong></td><td>0 / 1</td></tr>
+                  <tr class="highlight-row"><td><strong>SOP</strong></td><td>Follow-up role</td><td>48%</td><td><strong>98%</strong></td><td><strong>90.4%</strong></td><td>1 / 2</td></tr>
+                  <tr class="highlight-row"><td><strong>ALF</strong></td><td>Visible object check</td><td>35%</td><td><strong>96%</strong></td><td><strong>99.5%</strong></td><td>1 / 0</td></tr>
+                  <tr class="highlight-row"><td><strong>ALF</strong></td><td>Receptacle closed?</td><td>9%</td><td><strong>90%</strong></td><td><strong>94.4%</strong></td><td>0 / 0</td></tr>
+                  <tr><td><strong>ALF</strong></td><td>Search (where to look)</td><td>43%</td><td>17%</td><td>58.6%</td><td>0 / 0</td></tr>
+                  <tr><td><strong>ALF</strong></td><td>Receptacle type</td><td>13%</td><td>16%</td><td>78.3%</td><td>0 / 0</td></tr>
+                  <tr class="highlight-row"><td><strong>Web</strong></td><td>Relevance / match (yes/no)</td><td>34%</td><td><strong>83%</strong></td><td><strong>87.3%</strong></td><td>6 / 10</td></tr>
+                  <tr><td><strong>Web</strong></td><td>Description match (yes/no)</td><td>7%</td><td>13%</td><td>72.7%</td><td>0 / 1</td></tr>
+                  <tr class="highlight-row"><td><strong>Web</strong></td><td>Option checks</td><td>26%</td><td><strong>57%</strong></td><td><strong>94.0%</strong></td><td>2 / 1</td></tr>
+                  <tr><td><strong>Web</strong></td><td>Option value</td><td>15%</td><td>0%</td><td>—</td><td>0 / 0</td></tr>
+                  <tr><td><strong>Web</strong></td><td>Product choice ($>7$ options)</td><td>19%</td><td>0%</td><td>—</td><td>0 / 0</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p style="font-size: 0.78rem; color: var(--muted); margin: 10px 0 0;">
+              <strong>Key Insights:</strong> (1) Observation checks transfer across domains (90–100% delegated at 90–100% agreement), whereas open-world search and multi-item ranking have lower confidence and are deferred to System-2. (2) Under <strong>AnyS1<sub>warm</sub></strong>, 166 of 500 WebShop episodes diverge from All-S2, yet task success changes in only 20 episodes (<strong>12 won, 8 lost</strong>).
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Table 1 &amp; Table 6 · Synthesized Dataset Any-DP &amp; Quality Audit</h3>
+              <span class="pill pill-s1">1,072 Skills · 16 Categories</span>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <tbody>
+                  <tr><td><strong>Skills Processed (SkillMD-138K)</strong></td><td><strong>1,072</strong></td></tr>
+                  <tr><td><strong>Skill Categories</strong></td><td><strong>16</strong></td></tr>
+                  <tr><td><strong>Extracted Decision Points (D / E / G)</strong></td><td><strong>17,865</strong> (21.3% D · <strong>64.5% E</strong> · 14.2% G)</td></tr>
+                  <tr><td><strong>&nbsp;&nbsp;└ Enumerable Decision Points (E)</strong></td><td><strong>11,523</strong> (100% of skills have $\ge 1$ E-point)</td></tr>
+                  <tr><td><strong>Synthesized Multi-Stage Tasks</strong></td><td><strong>2,846</strong> (verifier-validated + 2 distractor skills)</td></tr>
+                  <tr><td><strong>Consensus-Labeled States ($|\mathcal{D}|$)</strong></td><td><strong>25,986</strong> (median 21 states/skill; <strong>89.2%</strong> teacher agreement)</td></tr>
+                  <tr><td><strong>Options per Decision Point</strong></td><td>Median 3; <strong>94.5%</strong> have $2\text{--}7$ options (<strong>6.7%</strong> pick <em>none</em>)</td></tr>
+                  <tr><td><strong>Cross-Family Blind Audit (500 States)</strong></td><td><strong>98.0%</strong> label correct (<strong>99.8%</strong> defensible); <strong>97.4%</strong> D/E/G type correct</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 8: Open-Source Ecosystem, Quickstart & BibTeX -->
+  <section id="citation">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">08 · Quickstart &amp; Citation</div>
+        <h2 class="section-title">Get Started</h2>
+      </div>
+
+      <div class="grid-2" style="margin-bottom: 24px;">
+        <div class="card" style="background: var(--bg-subtle); display: flex; flex-direction: column;">
+          <div class="card-header" style="margin-bottom: 10px;">
+            <div class="code-tabs" id="qsTabs">
+              <button class="code-tab-btn active" data-qs="cli_mcp">CLI &amp; MCP Server</button>
+              <button class="code-tab-btn" data-qs="py_sdk">Python SDK</button>
+              <button class="code-tab-btn" data-qs="hf_load">HF Data &amp; Model</button>
+            </div>
+            <button class="btn" id="copyQsBtn" style="padding: 5px 12px; font-size: 0.78rem;">📋 Copy</button>
+          </div>
+          <pre class="code-box" id="qsBlock" style="margin: 0; background: var(--surface); flex: 1;"></pre>
+        </div>
+
+        <div class="card" style="background: var(--bg-subtle); display: flex; flex-direction: column;">
+          <div class="card-header" style="margin-bottom: 10px;">
+            <span style="font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; color: var(--fg-secondary);">BibTeX Citation</span>
+            <button class="btn" id="copyBibBtn" style="padding: 5px 12px; font-size: 0.78rem;">📋 Copy BibTeX</button>
+          </div>
+          <pre class="code-box" id="bibBlock" style="margin: 0; background: var(--surface); flex: 1;">@inproceedings{anys1_2027,
+  title     = {Thinking Fast, Anywhere: One System-1 for the Decision Points of Any Agent Workflow},
+  booktitle = {Proceedings of the Annual Meeting of the Association for Computational Linguistics (ACL)},
+  year      = {2027},
+  url       = {https://github.com/middle-chunjie/AnyS1}
+}</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <strong>Thinking Fast, Anywhere (AnyS1)</strong> · One System-1 for the Decision Points of Any Agent Workflow · Any-DP
+      </div>
+      <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+        <span style="color: var(--muted); font-weight: 600;">Paper (coming soon)</span>
+        <a href="https://github.com/middle-chunjie/AnyS1" target="_blank" rel="noopener" style="color: var(--muted); text-decoration: none;">GitHub</a>
+        <a href="https://huggingface.co/datasets/middle-chunjie/SkillDP" target="_blank" rel="noopener" style="color: var(--muted); text-decoration: none;">Any-DP Dataset</a>
+        <a href="https://huggingface.co/middle-chunjie/AnyS1-4B" target="_blank" rel="noopener" style="color: var(--muted); text-decoration: none;">AnyS1-4B Model</a>
+        <a href="#compiler" style="color: var(--muted); text-decoration: none;">Skill Compiler</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Click-to-Zoom Vector Figure Lightbox -->
+  <div class="fig-lightbox" id="figLightbox" role="dialog" aria-modal="true" aria-label="Zoomed paper figure">
+    <div class="fig-lightbox-inner">
+      <img id="figLightboxImg" src="" alt="Enlarged vector figure">
+    </div>
+  </div>
+
+  <!-- Interactive Application Logic -->
+  <script>
+    // 1. Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const htmlEl = document.documentElement;
+    themeToggle.addEventListener('click', () => {
+      const next = htmlEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      htmlEl.setAttribute('data-theme', next);
+      themeToggle.textContent = next === 'dark' ? '☀️' : '🌙';
+    });
+
+    function renderMath(el) {
+      if (window.renderMathInElement) {
+        window.renderMathInElement(el || document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    }
+
+    // 2. Real SkillDP Examples Data (Final Pipeline: Mined Schema + Verifier-Checked Task -> Executed Container State)
+    const SKILL_DATA = {
+      claude_config: {
+        name: "md__claude-config-conventions",
+        dp: "m2",
+        category: "Agent & Dotfiles Engineering",
+        support: "3/3 Extractions (A, B, C)",
+        judgment: "Inferential Judgment",
+        summary: "Conventions for creating, reviewing, and modifying .claude/ configuration (rules, skills, agents, commands) in a repository: content placement, scope purity, and delegation boundaries.",
+        quote: "Skills define principles (WHAT). Agents define workflow (HOW). Never duplicate between them. Lightweight language-agnostic rules needed only in the main session belong in .claude/rules/.",
+        question: "Which layer should this piece of content live in: a Rule, a Skill, or an Agent?",
+        taskPrompt: `Task: Plan a dependency-license audit workflow for this repository. We keep Python dependency license exports in artifacts/license-report.csv; the policy team's current rules are in docs/license-policy.md. Wire a /audit-deps command that delegates the multi-step audit workflow to a dedicated reviewer subagent while keeping severity formatting reusable.\nContainer Setup: 3 stages · 2 distractor skills loaded · Reference solution & hidden verifier passed ✓`,
+        taskNote: "Synthesized from the skill with a reference solution and hidden verifier executed in a network-isolated Linux container before agent rollout.",
+        execState: `User request: sends the audit to a dedicated dependency auditor\nTool output (security-reviewer frontmatter):\n---\nname: security-reviewer\ndescription: Review code and configuration for security vulnerabilities and secret exposure.\ntools: Read, Grep, Glob, Bash, Skill\nskills: review-severity-format\n---`,
+        execNote: "✅ Extracted verbatim at step 6 of the OpenHands container trajectory: the model observes the raw YAML frontmatter and task context without agent reasoning leakage.",
+        label: "Agent (.claude/agents/, HOW workflow/process)",
+        teacherAgreement: "Forward Teacher: Agent ✓  |  Reverse-Order Teacher: Agent ✓",
+        options: [
+          { name: "Agent (.claude/agents/, HOW workflow/process)", def: "The content is HOW — a workflow or multi-step process an explicitly invoked subagent follows.", prob: 0.91, correct: true },
+          { name: "Skill (.claude/skills/, WHAT principles)", def: "The content is a WHAT principle, or is needed both in the main session and inside agents.", prob: 0.06, correct: false },
+          { name: "Rule (.claude/rules/, main session only)", def: "Lightweight, language-agnostic principle needed only in the main session and never by agents.", prob: 0.02, correct: false },
+          { name: "none of the above", def: "The content is duplicated between layers or is an anti-pattern that should be removed.", prob: 0.01, correct: false }
+        ]
+      },
+      add_translations: {
+        name: "md__add-translations",
+        dp: "m5",
+        category: "Web Front-End & Localization",
+        support: "3/3 Extractions (A, B, C)",
+        judgment: "Inferential Judgment",
+        summary: "Replace hardcoded UI-visible Dutch text in src/ with UPPER_SNAKE_CASE t() keys, routing each key to the appropriate module file under src/translations/nl/.",
+        quote: "Map hardcoded text to the appropriate translation file in `src/translations/nl/`. All files are merged together (no namespaces). Reuse existing keys when wording and context match.",
+        question: "Which translation file in src/translations/nl/ should receive this key?",
+        taskPrompt: `Task: Clean up the hardcoded Dutch copy in our React admin application under src/. Replace user-visible strings in TaskBoard.tsx and SettingsPanel.tsx with t() calls, adding missing Dutch entries to the matching domain files under src/translations/nl/ while reusing existing keys where wording and context already match.\nContainer Setup: 3 stages · 2 distractor skills loaded · Reference AST & translation verifier passed ✓`,
+        taskNote: "Requires the executing OpenHands agent to inspect existing translation modules and JSX components before routing keys.",
+        execState: `User request: The task board and settings screens still have Dutch text baked into JSX. Please make them use our translation helper and add the Dutch entries to the correct translation files under src/translations/nl/.\nTool output (raw TaskBoard.tsx lines 39-43):\nreturn (\n  <div>\n    <h1>Taken</h1>\n    <p>{openCount} open taken</p>\n    <button>Nieuwe taak</button>`,
+        execNote: "✅ Verbatim tool output captured when OpenHands inspects `TaskBoard.tsx` during container execution.",
+        label: "Tasks.ts",
+        teacherAgreement: "Forward Teacher: Tasks.ts ✓  |  Reverse-Order Teacher: Tasks.ts ✓",
+        options: [
+          { name: "Tasks.ts", def: "Pick this when the text belongs to task management and task board features.", prob: 0.94, correct: true },
+          { name: "Basic.ts", def: "Pick this for generic shared UI elements (buttons, labels, dates) not tied to one feature.", prob: 0.03, correct: false },
+          { name: "Dashboard.ts", def: "Pick this when the text belongs to overview dashboard widgets.", prob: 0.01, correct: false },
+          { name: "Settings.ts", def: "Pick this when the text belongs to settings and configuration screens.", prob: 0.01, correct: false },
+          { name: "none of the above", def: "No translation file should receive the key (excluded content or existing key reused).", prob: 0.01, correct: false }
+        ]
+      },
+      cost_tracker: {
+        name: "md__cost-accrual-tracker",
+        dp: "m1",
+        category: "LLM Systems & Observability",
+        support: "3/3 Extractions (A, B, C)",
+        judgment: "Inferential Scope Check",
+        summary: "Implement real-time API token cost accrual during streaming LLM execution, including partial cost capture on Ctrl-C abort and auto-stop budget thresholds.",
+        quote: "Scope check — ❌ NOT for: Cost estimation before execution (use pricing calculators), Billing system design (use billing-system skill), or historical cost analytics dashboards.",
+        question: "Does the user's request fall inside this skill's scope (real-time cost accrual during execution) or into one of the excluded areas?",
+        taskPrompt: `Task: Wire live token cost accrual into the streamrun CLI (` + "`streamrun/cost.py`" + ` and ` + "`executor.py`" + `) so in-flight requests stream running spend and Ctrl-C aborts record partial expenditure with completion status completed / aborted / failed, while leaving the web app's pre-flight pricing calculator untouched.\nContainer Setup: 3 stages · 2 distractor skills loaded · Reference unit tests & abort-signal verifier passed ✓`,
+        taskNote: "Deliberately mentions an adjacent excluded tool (the pre-flight pricing calculator) to test scope discrimination under realistic multi-component context.",
+        execState: `User request: We're wiring cost display into the streamrun CLI and I need real numbers while a request is in flight, not just a number printed at the end. CostAccrualTracker in streamrun/cost.py is still a stub, and executor.py currently drops everything on Ctrl-C — an aborted run has to still report what we already spent... Also leave the pre-flight estimator that lives in the web app alone, that's a separate tool.`,
+        execNote: "✅ Verbatim state extracted from the container run; System-1 accurately separates the target in-flight tracker from the excluded pre-flight estimator.",
+        label: "real-time cost accrual tracking",
+        teacherAgreement: "Forward Teacher: real-time cost accrual tracking ✓  |  Reverse-Order Teacher: real-time cost accrual tracking ✓",
+        options: [
+          { name: "real-time cost accrual tracking", def: "Measuring API/token cost while an LLM execution is running, including partial cost on abort.", prob: 0.89, correct: true },
+          { name: "cost estimation before execution", def: "Predicting what an execution will cost before running it (pre-flight calculator).", prob: 0.07, correct: false },
+          { name: "historical cost analytics dashboards", def: "Analyzing or charting past cost history instead of live in-flight accrual.", prob: 0.02, correct: false },
+          { name: "billing system design", def: "Designing a customer billing, invoicing, or quota charging system.", prob: 0.01, correct: false },
+          { name: "none of the above", def: "The request matches none of the listed categories.", prob: 0.01, correct: false }
+        ]
+      }
+    };
+
+    function renderSkillExplorer(skillKey) {
+      const d = SKILL_DATA[skillKey];
+      const container = document.getElementById('explorerContent');
+      const optionsHtml = d.options.map(o => `
+        <div class="option-item ${o.correct ? 'correct' : ''}">
+          <div class="option-name">${o.correct ? '✓ ' : ''}${o.name}</div>
+          <div class="option-def">${o.def}</div>
+          <div class="prob-bar-wrap">
+            <div class="prob-track"><div class="prob-fill" style="width:${Math.round(o.prob * 100)}%"></div></div>
+            <span>${(o.prob * 100).toFixed(0)}%</span>
+          </div>
+        </div>
+      `).join('');
+
+      container.innerHTML = `
+        <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px; margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid var(--border);">
+          <div>
+            <span style="font-family:var(--font-mono); font-size:0.8rem; color:var(--primary); font-weight:700;">Skill ID: ${d.name} (Decision Point ${d.dp})</span>
+            <h3 style="margin:4px 0 0; font-size:1.1rem;">${d.question}</h3>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <span class="pill pill-s1">${d.support}</span>
+            <span class="pill pill-zlg">${d.judgment}</span>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 18px; font-size: 0.85rem; color: var(--fg-secondary);">
+          <strong>Skill Summary:</strong> ${d.summary}<br>
+          <div style="margin-top: 8px; padding: 10px 14px; background: var(--bg-subtle); border-radius: 8px; border-left: 3px solid #eab308;">
+            <span style="font-family:var(--font-mono); font-size:0.74rem; font-weight:700; text-transform:uppercase; color:var(--muted);">Stage 1 · Verbatim Evidence Quote from SKILL.md:</span><br>
+            <span class="quote-highlight">"${d.quote}"</span>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom: 20px;">
+          <div style="border: 1px solid var(--s1-border); background: var(--s1-bg); border-radius: 10px; padding: 16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <strong style="font-size:0.86rem; color:var(--s1-fg);">🛠️ Stage 2a · Verifier-Checked Multi-Stage Container Task</strong>
+              <span class="pill pill-s1">Isolated Docker</span>
+            </div>
+            <div class="code-box" style="background: var(--surface); margin-bottom: 8px;">${d.taskPrompt}</div>
+            <div style="font-size: 0.79rem; color: var(--fg-secondary);">${d.taskNote}</div>
+          </div>
+
+          <div style="border: 1.5px solid var(--zlg-border); background: var(--zlg-bg); border-radius: 10px; padding: 16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <strong style="font-size:0.86rem; color:var(--zlg-fg);">✅ Stage 2b · Verbatim OpenHands Executed State (Any-DP)</strong>
+              <span class="pill pill-zlg">Real Tool Output</span>
+            </div>
+            <div class="code-box" style="background: var(--surface); margin-bottom: 8px;">${d.execState}</div>
+            <div style="font-size: 0.79rem; color: var(--fg-secondary);">${d.execNote}</div>
+          </div>
+        </div>
+
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <span style="font-family:var(--font-mono); font-size:0.76rem; font-weight:700; color:var(--muted); text-transform:uppercase;">
+              Stage 3 · Options $O$, Definitions $d(o)$, &amp; Calibrated 4B System-1 Single-Pass Distribution
+            </span>
+            <span class="pill pill-zlg">${d.teacherAgreement}</span>
+          </div>
+          <div class="option-list">${optionsHtml}</div>
+        </div>
+      `;
+      renderMath(container);
+    }
+
+    document.getElementById('skillTabs').addEventListener('click', (e) => {
+      const btn = e.target.closest('.exp-tab');
+      if (!btn) return;
+      document.querySelectorAll('#skillTabs .exp-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderSkillExplorer(btn.dataset.skill);
+    });
+    renderSkillExplorer('claude_config');
+
+    // 3. Calibration & Gate Diagnostic Micro-Widget
+    const PERT_STATES = {
+      orig: {
+        badge: "✓ Calibrated Single-Pass Gate (Accepted in 24 ms)",
+        badgeClass: "pill-zlg",
+        desc: "Trained with label smoothing ($\\epsilon = 0.1$), System-1 reserves probability mass across options so confidence reflects true accuracy. At $c(x) = \\max_o p_f(o\\mid x) = 0.93 \\ge \\tau$, the decision is safely delegated in one forward pass.",
+        detail: "Mean ECE: 0.094  |  Share p ≥ 0.90: 44–76%  |  ALFWorld Transferred Agreement: 98.4%"
+      },
+      rot: {
+        badge: "⚠️ Probability Saturation without Label Smoothing (ε = 0)",
+        badgeClass: "pill-danger",
+        desc: "Without label smoothing, plain cross-entropy leaves raw accuracy unchanged (82.3% vs. 82.4%) but pushes $p \\ge 0.90$ on 88–93% of decisions. The dev threshold jumps to $\\tau = 0.998$ and fails on ALFWorld: delegating 70% of decisions at only 83.0% agreement.",
+        detail: "Mean ECE: 0.146  |  Share p ≥ 0.90: 88–93% (Saturated)  |  ALFWorld Transferred Agreement: 83.0% (Collapsed)"
+      },
+      dist: {
+        badge: "↪ Why the Gate Matters: Deferring Open-World Search",
+        badgeClass: "pill-s2",
+        desc: "On ALFWorld room-search decisions ('Which unvisited receptacle should we check next?'), System-1 confidence stays below $\\tau$ ($c(x) = 0.41 < 0.89$). Without a gate (`All-S1`), ALFWorld collapses from 96.3% to 40.3% (71/77 losses diverge at search); with `AnyS1_warm` or `AnyS1_cold`, only 1 game is lost (95.5%).",
+        detail: "All-S1 (No Gate): 40.3% SR (-56.0*)  |  AnyS1_warm / AnyS1_cold: 95.5% SR (-0.7, 1 game lost)"
+      }
+    };
+
+    function setPertState(key, activeBtnId) {
+      ['pertBtnOrig', 'pertBtnRot', 'pertBtnDist'].forEach(id => {
+        document.getElementById(id).classList.toggle('active', id === activeBtnId);
+      });
+      const st = PERT_STATES[key];
+      document.getElementById('pertOutput').innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:6px;">
+          <strong style="font-size:0.83rem;">Diagnostic: How Calibration &amp; Deferral Prevent Cascade Failures</strong>
+          <span class="pill ${st.badgeClass}">${st.badge}</span>
+        </div>
+        <p style="margin:0 0 8px; color:var(--fg-secondary); font-size:0.8rem;">${st.desc}</p>
+        <div style="font-family:var(--font-mono); font-size:0.75rem; color:var(--primary); background:var(--bg-subtle); padding:6px 10px; border-radius:6px;">${st.detail}</div>
+      `;
+      renderMath(document.getElementById('pertOutput'));
+    }
+    document.getElementById('pertBtnOrig').addEventListener('click', () => setPertState('orig', 'pertBtnOrig'));
+    document.getElementById('pertBtnRot').addEventListener('click', () => setPertState('rot', 'pertBtnRot'));
+    document.getElementById('pertBtnDist').addEventListener('click', () => setPertState('dist', 'pertBtnDist'));
+    setPertState('orig', 'pertBtnOrig');
+
+    // 4. Interactive Gate & Cost Breakdown Simulator (Cross-Backbone: DeepSeek-V4.1-Flash & GPT-6 Sol)
+    const GATE_SIM_BY_BACKBONE = {
+      ds: {
+        all_s2: {
+          summary: "<strong>All-S2 (DeepSeek-V4.1-Flash · Compiled Reference):</strong> Skills are compiled into D/E/G nodes with System-2 answering all E and G nodes. Cuts cost by 4.2–7.3× (+17.8 avg pt) over uncompiled agents and serves as our 1.00× baseline.",
+          style: "neutral",
+          benchmarks: [
+            { name: "SOPBench", metric: "83.2% Pass", delta: "Ref (25.0s)", del: "0%", cost: "1.00×", g: 72.0, e: 28.0, s1: 0.0 },
+            { name: "ALFWorld", metric: "96.3% SR", delta: "Ref (21.3s)", del: "0%", cost: "1.00×", g: 9.5, e: 90.5, s1: 0.0 },
+            { name: "WebShop", metric: "66.9 Sc (38.0% SR)", delta: "Ref (29.0s)", del: "0%", cost: "1.00×", g: 6.4, e: 93.6, s1: 0.0 }
+          ]
+        },
+        anys1_warm: {
+          summary: "<strong>AnyS1<sub>warm</sub> + DeepSeek-V4.1-Flash (50 Unlabeled Dev Runs, 0 Human Labels):</strong> Fits $\\tau$ on 50 unlabeled dev runs. Delegates 44–99% of E-decisions in 1 forward pass (22–32 ms), saving <strong>35–42%</strong> cost (mean <strong>38%</strong>) and cutting model time to <strong>12.9–17.1 s</strong> while achieving <strong>+0.5 avg pt</strong> (+1.3* WebShop CI).",
+          style: "zlg",
+          benchmarks: [
+            { name: "SOPBench", metric: "84.3% Pass", delta: "+1.1 · 15.6s", del: "99%", cost: "0.65× (-35%)", g: 64.3, e: 0.4, s1: 0.7 },
+            { name: "ALFWorld", metric: "95.5% SR", delta: "-0.7 · 12.9s", del: "51%", cost: "0.61× (-39%)", g: 9.9, e: 49.4, s1: 2.1 },
+            { name: "WebShop", metric: "68.1 Sc (38.8% SR)", delta: "+1.3* · 17.1s", del: "44%", cost: "0.58× (-42%)", g: 5.8, e: 51.0, s1: 1.0 }
+          ]
+        },
+        anys1_cold: {
+          summary: "<strong>AnyS1<sub>cold</sub> + DeepSeek-V4.1-Flash (Transferred $\\tau=0.918$, 0 Target Runs):</strong> Transfers a single threshold fitted on 153 held-out dev states with zero target-workflow runs. Keeps <strong>+0.1 avg pt</strong> while saving <strong>8–54%</strong> cost (mean <strong>29%</strong>).",
+          style: "s1",
+          benchmarks: [
+            { name: "SOPBench", metric: "83.2% Pass", delta: "0.0 · 21.2s", del: "40%", cost: "0.92× (-8%)", g: 72.0, e: 19.3, s1: 0.8 },
+            { name: "ALFWorld", metric: "95.5% SR", delta: "-0.7 · 15.7s", del: "33%", cost: "0.76× (-24%)", g: 9.9, e: 63.7, s1: 2.0 },
+            { name: "WebShop", metric: "67.9 Sc (38.0% SR)", delta: "+1.0 · 12.7s", del: "58%", cost: "0.46× (-54%)", g: 5.9, e: 39.5, s1: 1.0 }
+          ]
+        },
+      },
+      sol: {
+        all_s2: {
+          summary: "<strong>All-S2 (GPT-6 Sol · Compiled Reference):</strong> Frontier GPT-6 Sol answers all compiled E and G nodes (82.1% SOPBench, 96.3% ALFWorld, 70.6 WebShop score / 41.8% SR). Higher per-token API pricing makes System-1 inference overhead $\\kappa$ negligible.",
+          style: "neutral",
+          benchmarks: [
+            { name: "SOPBench", metric: "82.1% Pass", delta: "Ref (124s)", del: "0%", cost: "1.00×", g: 72.0, e: 28.0, s1: 0.0 },
+            { name: "ALFWorld", metric: "96.3% SR", delta: "Ref (193s)", del: "0%", cost: "1.00×", g: 9.5, e: 90.5, s1: 0.0 },
+            { name: "WebShop", metric: "70.6 Sc (41.8% SR)", delta: "Ref (81.4s)", del: "0%", cost: "1.00×", g: 6.4, e: 93.6, s1: 0.0 }
+          ]
+        },
+        anys1_warm: {
+          summary: "<strong>AnyS1<sub>warm</sub> + GPT-6 Sol (50 Unlabeled Sol Dev Episodes, No Retraining):</strong> Using the unchanged Any-DP 4B System-1, AnyS1<sub>warm</sub> keeps task success within 0.2 avg pt (-0.2) of GPT-6 Sol <code>All-S2</code> while saving <strong>30–44%</strong> cost (mean <strong>36%</strong>) and <strong>39–48%</strong> model-call time.",
+          style: "zlg",
+          benchmarks: [
+            { name: "SOPBench", metric: "82.5% Pass", delta: "+0.4 · 75.8s", del: "80%", cost: "0.65× (-35%)", g: 63.5, e: 1.0, s1: 0.5 },
+            { name: "ALFWorld", metric: "95.5% SR", delta: "-0.7 · 101s", del: "49%", cost: "0.56× (-44%)", g: 9.9, e: 44.5, s1: 1.6 },
+            { name: "WebShop", metric: "70.4 Sc (40.0% SR)", delta: "-0.2 · 49.4s", del: "37%", cost: "0.70× (-30%)", g: 6.0, e: 62.5, s1: 1.5 }
+          ]
+        },
+        anys1_cold: {
+          summary: "<strong>AnyS1<sub>cold</sub> + GPT-6 Sol (Unchanged Transferred $\\tau=0.918$, 0 Target Runs):</strong> Zero-shot threshold transfer to an unseen System-2 backbone saves <strong>14–49%</strong> cost (mean <strong>31%</strong>) and cuts WebShop model time from <strong>81.4s → 33.3s</strong>.",
+          style: "s1",
+          benchmarks: [
+            { name: "SOPBench", metric: "82.5% Pass", delta: "+0.4 · 107s", del: "37%", cost: "0.86× (-14%)", g: 71.5, e: 14.0, s1: 0.5 },
+            { name: "ALFWorld", metric: "94.0% SR", delta: "-2.2 · 134s", del: "33%", cost: "0.71× (-29%)", g: 9.9, e: 59.5, s1: 1.6 },
+            { name: "WebShop", metric: "70.1 Sc (40.4% SR)", delta: "-0.5 · 33.3s", del: "57%", cost: "0.51× (-49%)", g: 6.0, e: 44.0, s1: 1.0 }
+          ]
+        },
+      }
+    };
+
+    let currentBackbone = 'ds';
+    let currentGateKey = 'anys1_warm';
+
+    function renderGateSim() {
+      const data = GATE_SIM_BY_BACKBONE[currentBackbone][currentGateKey];
+      const banner = document.getElementById('gateSimBanner');
+      banner.innerHTML = data.summary;
+      renderMath(banner);
+      if (data.style === 'danger') {
+        banner.style.background = 'var(--danger-bg)';
+        banner.style.borderColor = 'var(--danger-border)';
+        banner.style.color = 'var(--danger-fg)';
+      } else if (data.style === 's1') {
+        banner.style.background = 'var(--s1-bg)';
+        banner.style.borderColor = 'var(--s1-border)';
+        banner.style.color = 'var(--s1-fg)';
+      } else {
+        banner.style.background = 'var(--zlg-bg)';
+        banner.style.borderColor = 'var(--zlg-border)';
+        banner.style.color = 'var(--zlg-fg)';
+      }
+
+      document.getElementById('gateSimBars').innerHTML = data.benchmarks.map(b => `
+        <div class="bench-sim-row">
+          <div class="bench-sim-top">
+            <strong>${b.name}</strong>
+            <span style="font-family:var(--font-mono); font-size:0.75rem; white-space:nowrap;">
+              <span style="color:var(--fg); font-weight:700;">${b.metric}</span>
+              <span style="color:var(--muted);"> (${b.delta})</span> ·
+              <span style="color:var(--primary); font-weight:700;">Del ${b.del}</span> ·
+              <span style="background:var(--bg-subtle); padding:2px 6px; border-radius:4px; font-weight:700;">${b.cost}</span>
+            </span>
+          </div>
+          <div class="cost-stack-track" title="G-Node S2: ${b.g}% | E-Node S2: ${b.e}% | S1 Overhead: ${b.s1}%">
+            <div class="cost-seg-g" style="width:${Math.min(b.g, 100)}%"></div>
+            <div class="cost-seg-e" style="width:${Math.min(b.e, 100)}%"></div>
+            <div class="cost-seg-s1" style="width:${Math.min(b.s1, 100)}%"></div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('gateControls').addEventListener('click', (e) => {
+      const btn = e.target.closest('.gate-btn');
+      if (!btn) return;
+      document.querySelectorAll('#gateControls .gate-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentGateKey = btn.dataset.gate;
+      renderGateSim();
+    });
+
+    document.getElementById('backboneSwitch').addEventListener('click', (e) => {
+      const btn = e.target.closest('.code-tab-btn');
+      if (!btn) return;
+      document.querySelectorAll('#backboneSwitch .code-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentBackbone = btn.dataset.bb;
+      renderGateSim();
+    });
+    renderGateSim();
+
+    // 6. Experimental Results Tabs
+    document.getElementById('resTabs').addEventListener('click', (e) => {
+      const btn = e.target.closest('.res-tab');
+      if (!btn) return;
+      document.querySelectorAll('#resTabs .res-tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.res-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.panel).classList.add('active');
+    });
+
+    // 7. Copy BibTeX
+    document.getElementById('copyBibBtn').addEventListener('click', () => {
+      const text = document.getElementById('bibBlock').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copyBibBtn');
+        const orig = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => { btn.textContent = orig; }, 1800);
+      });
+    });
+
+    // 8. Interactive SKILL.md Compiler Playground
+    const SKILL_PRESETS = {
+      code_review: `---
+name: pr-security-and-code-review
+description: Triage pull request diffs, enforce deterministic lint gates, route domain checks, and write review feedback.
+---
+# PR Security & Code Review Skill
+
+## Step 1: Deterministic Pre-Checks
+- Verify \`git diff\` is non-empty and check whether lockfiles (\`package-lock.json\`, \`uv.lock\`) or CI workflows changed.
+
+## Step 2: Classify Primary Risk Surface
+Choose which review track applies to the modified files:
+- \`auth_and_crypto\`: Changes touch JWT, session cookies, OAuth callbacks, secrets, or RBAC middleware.
+- \`database_migration\`: Changes alter SQL schemas, Alembic migrations, indexes, or ORM transactions.
+- \`standard_application\`: Routine business logic, UI components, or unit tests with no security/schema changes.
+
+## Step 3: Decide Merge Gate Action
+Based on test output and risk analysis, select one disposition:
+- \`approve_clean\`: All checks pass and no blocking security or correctness defects exist.
+- \`request_changes\`: Concrete bug, missing migration rollback, or security regression identified.
+- \`escalate_security_team\`: Touches production auth keys, KMS policies, or privilege boundaries.
+
+## Step 4: Draft Actionable Review Summary
+- Write a concise markdown review comment citing exact \`file:line\` spans and minimal fix snippets.`,
+
+      frontend_ui: `---
+name: frontend-accessibility-audit
+description: Audit React/CSS pull requests for layout hierarchy, WCAG contrast, and responsive state coverage.
+---
+# Frontend UI & Accessibility Audit
+
+## Step 1: Static Token & Asset Scan
+- Run regex scan for hardcoded hex colors (\`#[0-9a-fA-F]{6}\`) and missing \`alt\` attributes on \`<img>\` elements.
+
+## Step 2: Diagnose Primary Visual Defect Category
+Select the dominant UI issue observed in the component diff or DOM snapshot:
+- \`wcag_contrast_violation\`: Text or interactive badge contrast ratio falls below 4.5:1.
+- \`responsive_overflow\`: Fixed pixel widths or un-wrapped flex rows clip on 375px mobile viewports.
+- \`missing_interactive_state\`: Buttons or inputs lack \`:focus-visible\`, loading, or empty/error states.
+- \`layout_clean\`: Visual hierarchy, spacing tokens, and responsive breakpoints satisfy design rules.
+
+## Step 3: Patch Strategy Selection
+Choose the minimal remediation scope:
+- \`design_token_swap\`: Replace hardcoded values with existing CSS custom properties.
+- \`layout_refactor\`: Restructure CSS Grid / Flexbox container rules.
+- \`no_patch_needed\`: Component already conforms to specification.
+
+## Step 4: Generate Component Patch
+- Synthesize the minimal JSX/CSS diff preserving keyboard tab order and ARIA semantics.`,
+
+      incident_sop: `---
+name: payment-api-incident-triage
+description: On-call SOP for 5xx latency spikes on checkout and payment gateway services.
+---
+# Payment Gateway Incident Triage SOP
+
+## Step 1: Collect Telemetry Snapshot
+- Query Prometheus 5m error rate, p99 latency, and latest deployment SHA from \`deploy-events.json\`.
+
+## Step 2: Identify Root-Cause Hypothesis
+Classify the incident signature into one operational bucket:
+- \`bad_canary_deploy\`: Error spike started within 15 minutes of a new canary rollout.
+- \`upstream_psp_degradation\`: External Stripe/Adyen webhook timeouts exceed 5% while internal DB p99 is normal.
+- \`db_connection_pool_exhausted\`: PgBouncer active connections >= 95% with lock wait spikes.
+
+## Step 3: Select Immediate Mitigation
+Choose the authorized SOP mitigation action:
+- \`rollback_canary\`: Revert canary traffic weight to 0% immediately.
+- \`failover_secondary_psp\`: Flip feature flag \`payment.psp_route\` to backup provider.
+- \`throttle_noncritical_workers\`: Shed background reconciliation jobs and page DBA on-call.
+
+## Step 4: Post-Mitigation Status Note
+- Draft a 3-bullet Slack incident update with blast radius, mitigation taken, and next checkpoint.`
+    };
+
+    function cpEsc(s) {
+      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function cpInline(s) {
+      return cpEsc(s).replace(/`([^`]+)`/g, '<code>$1</code>');
+    }
+
+    // Offline structural parser: frontmatter, then one block per "## " step; each step becomes a D, E or G point.
+    function parseSkillMarkdownClient(mdText) {
+      const lines = mdText.split('\n');
+      const nameMatch = mdText.match(/name:\s*([^\n]+)/);
+      const skillName = nameMatch ? nameMatch[1].trim() : 'custom-agent-skill';
+      const blocks = [];
+      let i = 0;
+      if (lines[0] && lines[0].trim() === '---') {
+        let j = 1;
+        while (j < lines.length && lines[j].trim() !== '---') j++;
+        blocks.push({ kind: 'meta', lines: lines.slice(0, Math.min(j + 1, lines.length)) });
+        i = j + 1;
+      }
+      let cur = { kind: 'meta', lines: [] };
+      for (; i < lines.length; i++) {
+        if (/^##\s+/.test(lines[i])) {
+          if (cur.lines.some(l => l.trim())) blocks.push(cur);
+          cur = { kind: 'step', lines: [lines[i]] };
+        } else {
+          cur.lines.push(lines[i]);
+        }
+      }
+      if (cur.lines.some(l => l.trim())) blocks.push(cur);
+
+      const points = [];
+      let idx = 1;
+      blocks.filter(b => b.kind === 'step').forEach(b => {
+        const title = b.lines[0].replace(/^##\s+/, '').replace(/^Step\s*\d+\s*[:.-]?\s*/i, '').trim();
+        const body = b.lines.slice(1).join('\n').trim();
+        const optMatches = [...body.matchAll(/^[-*]\s+`([^`]+)`\s*:\s*(.+)$/gm)];
+        const id = `dp_${String(idx++).padStart(2, '0')}`;
+        b.id = id;
+        if (optMatches.length >= 2) {
+          const options = optMatches.map(m => ({ name: m[1].trim(), definition: m[2].trim() }));
+          options.push({ name: 'none of the above', definition: 'None of the listed branches matches the runtime observation.' });
+          b.type = 'E';
+          points.push({ id, type: 'E', title, question: `Which branch applies for "${title}" given the current runtime state?`, tau_cold: 0.918, options });
+        } else if (/(regex|non-empty|verify|query|collect|scan|lookup|check whether|static)/i.test(title + ' ' + body)) {
+          b.type = 'D';
+          points.push({ id, type: 'D', title, rule: body.replace(/^[-*]\s+/, '').trim() });
+        } else {
+          b.type = 'G';
+          points.push({ id, type: 'G', title, prompt_goal: body.replace(/^[-*]\s+/, '').trim() });
+        }
+      });
+      return { skill: skillName, tau_cold: 0.918, points, _blocks: blocks };
+    }
+
+    let currentCompilerOutTab = 'decisions';
+    let lastCompiledSpec = null;
+
+    function formatCompilerArtifact(spec, tab) {
+      if (tab === 'decisions') {
+        const { _blocks, ...clean } = spec;
+        return JSON.stringify(clean, null, 2);
+      }
+      if (tab === 'mcp_skill') {
+        const hooks = spec.points.map(p => {
+          if (p.type === 'D') {
+            return `### [${p.id} · D-Node · Deterministic Code]\n- Execute directly via script/tool without LLM deliberation: ${p.rule}`;
+          }
+          if (p.type === 'E') {
+            const opts = p.options.filter(o => o.name !== 'none of the above').map(o => `\`${o.name}\``).join(', ');
+            return `### [${p.id} · E-Node · AnyS1 Gated Hook (τ = ${p.tau_cold})]\n- **Call MCP tool first:** \`anys1_decide(point_id="${p.id}", state=<verbatim_obs>)\`\n- **Options:** ${opts} (+ \`none\`)\n- If response is \`ACCEPTED_SYSTEM1\`, follow the returned branch immediately; only deliberate with System-2 on \`DEFER_TO_SYSTEM2\`.`;
+          }
+          return `### [${p.id} · G-Node · System-2 Generation]\n- Route open-ended synthesis to System-2: ${p.prompt_goal}`;
+        }).join('\n\n');
+        return `# ${spec.skill} (Compiled SKILL.anys1.md)\n# Attach MCP server: anys1 mcp --compiled ./compiled --s1-url http://127.0.0.1:8895/decide\n\n${hooks}`;
+      }
+      const stepLines = spec.points.map(p => {
+        if (p.type === 'D') return `        # ${p.id} (D-node): 0 LLM tokens\n        obs = self.run_deterministic("${p.id}", state)`;
+        if (p.type === 'E') return `        # ${p.id} (E-node): 1-pass AnyS1-4B pointer + gate (c(x) >= self.tau)\n        branch_${p.id} = self.runtime.decide("${p.id}", state=obs)`;
+        return `        # ${p.id} (G-node): Frontier System-2 synthesis\n        return self.runtime.generate("${p.id}", state=obs)`;
+      }).join('\n');
+      return `from anys1.runtime import DualSystemRuntime\n\nclass CompiledSkillWorkflow:\n    skill_name = "${spec.skill}"\n\n    def __init__(self, tau: float = 0.918, mode: str = "anys1_cold"):\n        self.tau = tau\n        self.runtime = DualSystemRuntime.from_decisions("./compiled/decisions.json", tau=tau, mode=mode)\n\n    def forward(self, state: str):\n        obs = state\n${stepLines}`;
+    }
+
+    function cpRenderSource(spec) {
+      const html = spec._blocks.map(b => {
+        const body = b.lines.map((l, k) => {
+          if (k === 0 && b.kind === 'step') return `<span class="cp-h">${cpEsc(l)}</span>`;
+          if (/^#\s+/.test(l)) return `<span class="cp-h">${cpEsc(l)}</span>`;
+          if (b.type === 'E') {
+            const m = l.match(/^([-*]\s+)`([^`]+)`(\s*:\s*.+)$/);
+            if (m) return `${cpEsc(m[1])}<span class="cp-optname">${cpEsc(m[2])}</span>${cpInline(m[3])}`;
+          }
+          return cpInline(l);
+        }).join('\n').replace(/\n+$/, '');
+        if (b.kind !== 'step') return `<div class="cp-block meta">${body}</div>`;
+        return `<div class="cp-block t-${b.type}" data-id="${b.id}"><span class="cp-tag t-${b.type}">${b.type} · ${b.id}</span>${body}</div>`;
+      }).join('');
+      document.getElementById('cpSourceView').innerHTML = html;
+      document.getElementById('cpSkillName').textContent = spec.skill;
+    }
+
+    function cpRenderFlow(spec) {
+      const n = { D: 0, E: 0, G: 0 };
+      spec.points.forEach(p => n[p.type]++);
+      const total = Math.max(1, spec.points.length);
+      document.getElementById('cpBar').innerHTML = ['D', 'E', 'G']
+        .map(t => `<i class="t-${t}" style="width:${(100 * n[t] / total).toFixed(1)}%"></i>`).join('');
+      document.getElementById('cpProfile').innerHTML =
+        `<b>${n.D}</b> step${n.D === 1 ? '' : 's'} run as code with no LLM call · ` +
+        `<b>${n.E}</b> enumerable choice${n.E === 1 ? '' : 's'} answered by System-1 in one forward pass · ` +
+        `<b>${n.G}</b> generation step${n.G === 1 ? '' : 's'} sent to System-2`;
+      const exec = {
+        D: '<b class="t-D">Code</b> · deterministic check, no model call',
+        E: '<b class="t-E">System-1 first</b> · one forward pass over the options',
+        G: '<b class="t-G">System-2</b> · open-ended generation'
+      };
+      document.getElementById('cpFlow').innerHTML = spec.points.map(p => {
+        let extra = '';
+        if (p.type === 'E') {
+          const chips = p.options.map(o => `<span class="cp-opt${o.name === 'none of the above' ? ' none' : ''}" title="${cpEsc(o.definition)}">${cpEsc(o.name)}</span>`).join('');
+          extra = `<div class="cp-opts">${chips}</div>
+            <div class="cp-gate"><code>p<sub>max</sub> ≥ τ</code><span class="g-acc">use System-1's answer</span><span>·</span><span>otherwise</span><span class="g-def">defer to System-2</span></div>`;
+        } else {
+          const txt = p.type === 'D' ? p.rule : p.prompt_goal;
+          if (txt) extra = `<div class="cp-detail">${cpInline(txt)}</div>`;
+        }
+        return `<li class="cp-node t-${p.type}" data-id="${p.id}">
+          <i class="cp-dot t-${p.type}">${p.type}</i>
+          <div class="cp-card">
+            <div class="cp-card-head"><span class="cp-card-title">${cpEsc(p.title)}</span><span class="cp-card-id">${p.id}</span></div>
+            <div class="cp-exec">${exec[p.type]}</div>${extra}
+          </div>
+        </li>`;
+      }).join('') || '<li class="cp-note">No "## " steps found. Add steps such as <code>## Step 1: …</code> to compile.</li>';
+    }
+
+    function runSkillCompiler() {
+      const md = document.getElementById('skillInput').value;
+      lastCompiledSpec = parseSkillMarkdownClient(md);
+      cpRenderSource(lastCompiledSpec);
+      cpRenderFlow(lastCompiledSpec);
+      document.getElementById('compilerOutputBox').textContent = formatCompilerArtifact(lastCompiledSpec, currentCompilerOutTab);
+    }
+
+    function cpLink(id, on) {
+      document.querySelectorAll(`#compiler [data-id="${id}"]`).forEach(el => el.classList.toggle('linked', on));
+    }
+    ['cpSourceView', 'cpFlow'].forEach(paneId => {
+      const pane = document.getElementById(paneId);
+      pane.addEventListener('mouseover', e => { const el = e.target.closest('[data-id]'); if (el) cpLink(el.dataset.id, true); });
+      pane.addEventListener('mouseout', e => { const el = e.target.closest('[data-id]'); if (el) cpLink(el.dataset.id, false); });
+      pane.addEventListener('click', e => {
+        const el = e.target.closest('[data-id]');
+        if (!el) return;
+        const otherSel = paneId === 'cpFlow' ? '#cpSourceView' : '#cpFlow';
+        const target = document.querySelector(`${otherSel} [data-id="${el.dataset.id}"]`);
+        if (target) {
+          const box = target.parentElement.closest('.cp-source, .cp-flow');
+          if (box) box.scrollTo({ top: target.offsetTop - box.offsetTop - 8, behavior: 'smooth' });
+          document.querySelectorAll('#compiler .linked').forEach(x => x.classList.remove('linked'));
+          cpLink(el.dataset.id, true);
+        }
+      });
+    });
+
+    document.getElementById('cpPresets').addEventListener('click', e => {
+      const btn = e.target.closest('.cp-preset');
+      if (!btn) return;
+      document.querySelectorAll('#cpPresets .cp-preset').forEach(b => b.classList.toggle('active', b === btn));
+      document.getElementById('skillInput').value = SKILL_PRESETS[btn.dataset.preset];
+      runSkillCompiler();
+    });
+
+    document.getElementById('cpEditBtn').addEventListener('click', () => {
+      const btn = document.getElementById('cpEditBtn');
+      const ta = document.getElementById('skillInput');
+      const editing = ta.hidden;
+      ta.hidden = !editing;
+      document.getElementById('cpSourceView').hidden = editing;
+      btn.classList.toggle('active', editing);
+      btn.setAttribute('aria-pressed', String(editing));
+      btn.textContent = editing ? '✓ Done' : '✎ Edit';
+      if (editing) ta.focus();
+      else runSkillCompiler();
+    });
+
+    document.getElementById('compilerOutTabs').addEventListener('click', (e) => {
+      const btn = e.target.closest('.code-tab-btn');
+      if (!btn) return;
+      document.querySelectorAll('#compilerOutTabs .code-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCompilerOutTab = btn.dataset.out;
+      if (lastCompiledSpec) {
+        document.getElementById('compilerOutputBox').textContent = formatCompilerArtifact(lastCompiledSpec, currentCompilerOutTab);
+      }
+    });
+    document.getElementById('skillInput').addEventListener('input', runSkillCompiler);
+    document.getElementById('copyCompilerOutBtn').addEventListener('click', () => {
+      navigator.clipboard.writeText(document.getElementById('compilerOutputBox').textContent).then(() => {
+        const btn = document.getElementById('copyCompilerOutBtn');
+        const orig = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => { btn.textContent = orig; }, 1600);
+      });
+    });
+    document.getElementById('skillInput').value = SKILL_PRESETS.code_review;
+    runSkillCompiler();
+
+
+    // 9. Quickstart Code Tabs & Copy
+    const QS_SNIPPETS = {
+      cli_mcp: `# 1. Install AnyS1 & launch local AnyS1-4B pointer server (22-32 ms/decision on H100)
+git clone https://github.com/middle-chunjie/AnyS1.git && cd AnyS1 && pip install -e ".[train]"
+python -m anys1.model.serve_s1 --checkpoint middle-chunjie/AnyS1-4B --port 8895 --dtype bf16
+
+# 2. Compile any SKILL.md into D/E/G decision points + MCP hook + Python workflow
+anys1 compile examples/code_review_skill/SKILL.md -o ./compiled
+
+# 3. Attach MCP stdio server in Claude Code / Cursor / OpenHands (or calibrate warm tau)
+anys1 mcp --compiled ./compiled --s1-url http://127.0.0.1:8895/decide
+anys1 calibrate --shadow shadow.jsonl --target-agr 0.95 -o calibration_warm.json`,
+      py_sdk: `from examples.code_review_skill.compiled.workflow import CompiledSkillWorkflow
+
+# Zero-shot cold start (tau = 0.918) or warm calibration from 50 unlabeled dev runs
+wf = CompiledSkillWorkflow(tau=0.918, mode="anys1")
+
+choice = wf.step(
+    "dp_02",
+    state="Modified files: auth/jwt_session.py (+42 -11). Added bearer token expiry check.",
+)
+print("Resolved branch:", choice)          # Accepted in 1 forward pass or safely deferred to S2
+print("Episode stats:", wf.runtime.summary())`,
+      hf_load: `from datasets import load_dataset
+from huggingface_hub import snapshot_download
+
+# Load Any-DP (25,986 teacher-consensus container states across 1,072 public skills)
+ds = load_dataset("middle-chunjie/SkillDP")
+print(ds["train"][0]["question"], ds["train"][0]["options"])
+
+# Download calibrated AnyS1-4B LoRA + OptionInteractionHead weights
+ckpt_dir = snapshot_download("middle-chunjie/AnyS1-4B")`
+    };
+
+    function setQsTab(key) {
+      document.getElementById('qsBlock').textContent = QS_SNIPPETS[key];
+    }
+    document.getElementById('qsTabs').addEventListener('click', (e) => {
+      const btn = e.target.closest('.code-tab-btn');
+      if (!btn) return;
+      document.querySelectorAll('#qsTabs .code-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      setQsTab(btn.dataset.qs);
+    });
+    document.getElementById('copyQsBtn').addEventListener('click', () => {
+      navigator.clipboard.writeText(document.getElementById('qsBlock').textContent).then(() => {
+        const btn = document.getElementById('copyQsBtn');
+        const orig = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => { btn.textContent = orig; }, 1600);
+      });
+    });
+    setQsTab('cli_mcp');
+
+    // 10. Vector Figure Lightbox (Click-to-Zoom)
+    const lightbox = document.getElementById('figLightbox');
+    const lightboxImg = document.getElementById('figLightboxImg');
+    document.querySelectorAll('[data-zoom-src]').forEach(wrap => {
+      wrap.addEventListener('click', () => {
+        lightboxImg.src = wrap.getAttribute('data-zoom-src');
+        lightbox.classList.add('open');
+      });
+    });
+    lightbox.addEventListener('click', () => lightbox.classList.remove('open'));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') lightbox.classList.remove('open');
+    });
+
+    // 11. Render KaTeX when loaded
+    window.addEventListener('DOMContentLoaded', () => renderMath(document.body));
+    window.addEventListener('load', () => renderMath(document.body));
+  </script>
+</body>
+</html>

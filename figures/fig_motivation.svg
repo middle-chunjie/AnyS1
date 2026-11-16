@@ -1,0 +1,360 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="7.7cm" height="7.8925cm"
+     viewBox="0 0 800 820"
+     role="img" aria-labelledby="figure-title figure-description"
+     font-family="Arial, Helvetica, sans-serif"
+     font-size="17" font-weight="400"
+     fill="#24343B"
+     stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+
+  <title id="figure-title">AnyS1: one general System-1 for every skill</title>
+  <desc id="figure-description">
+    Prior dual-system work requires engineers to select decision points and
+    train a specialized System-1 separately for each workflow. AnyS1 mines
+    decision points from public skills offline, once, and trains one general
+    System-1 across skills. At run time, any agent selecting a skill executes
+    its decisions with System-1, deterministic steps with code, and open
+    generation or low-confidence decisions with System-2.
+  </desc>
+
+  <defs>
+    <marker id="arrowhead"
+            viewBox="0 0 7 7"
+            markerWidth="7" markerHeight="7"
+            refX="6" refY="3.5"
+            orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0 0 L7 3.5 L0 7 Z" fill="#4B5C66" stroke="none"/>
+    </marker>
+
+    <style>
+      .panel-title { font-size:23px; font-weight:700; }
+      .chip-label { font-weight:700; }
+      .muted { fill:#4B5C66; }
+      .s1-text { fill:#176D61; }
+      .s2-text { fill:#AC6023; }
+      .link { fill:none; stroke:#4B5C66; }
+      .arrow {
+        fill:none;
+        stroke:#4B5C66;
+        marker-end:url(#arrowhead);
+      }
+    </style>
+
+    <!-- Shared icon set: use at natural size to preserve the stroke width. -->
+    <g id="icon-system-1">
+      <circle cx="18" cy="18" r="18" fill="#D4EFE6"/>
+      <path d="M20 6 L10 20 H17 L14 30 L27 15 H20 Z"
+            fill="#299D8D"/>
+    </g>
+
+    <g id="icon-system-2">
+      <circle cx="18" cy="18" r="18" fill="#FDEBD4"/>
+      <path d="M9 11 L26 10 M9 11 L18 18 L26 10
+               M18 18 L10 26 L27 25 L18 18"
+            fill="none" stroke="#AC6023"/>
+      <g fill="#FFFFFF" stroke="#AC6023">
+        <circle cx="9" cy="11" r="2.4"/>
+        <circle cx="26" cy="10" r="2.4"/>
+        <circle cx="18" cy="18" r="2.4"/>
+        <circle cx="10" cy="26" r="2.4"/>
+        <circle cx="27" cy="25" r="2.4"/>
+      </g>
+    </g>
+
+    <g id="icon-code">
+      <circle cx="18" cy="18" r="18" fill="#E9EDEF"/>
+      <path d="M12 11 L6 18 L12 25
+               M24 11 L30 18 L24 25
+               M21 9 L15 27"
+            fill="none" stroke="#4B5C66"/>
+    </g>
+
+    <g id="icon-skill" fill="#FFFFFF" stroke="#4B5C66">
+      <path d="M3 1 H24 L35 12 V43 H3 Z"/>
+      <path d="M24 1 V12 H35" fill="#E9EDEF"/>
+      <path d="M9 21 H28 M9 28 H28 M9 35 H22" fill="none"/>
+    </g>
+
+    <g id="icon-hand-picked" fill="#FFFFFF" stroke="#4B5C66">
+      <path d="M14 3 C9 1 5 5 7 10
+               L2.8 14.2 A3.2 3.2 0 0 0 7.3 18.7
+               L11.5 14.5 C16.5 16.5 20.5 12.5 18.5 7.5
+               L15 11 L11 7 Z"/>
+      <circle cx="5.2" cy="16.3" r="1"
+              fill="#4B5C66" stroke="none"/>
+    </g>
+
+    <g id="icon-agent" fill="none" stroke="#4B5C66">
+      <path d="M18 4 V9"/>
+      <circle cx="18" cy="3" r="2" fill="#4B5C66" stroke="none"/>
+      <rect x="4" y="9" width="28" height="22" rx="6" fill="#E9EDEF"/>
+      <path d="M1 16 V24 M35 16 V24"/>
+      <circle cx="12" cy="19" r="2" fill="#4B5C66" stroke="none"/>
+      <circle cx="24" cy="19" r="2" fill="#4B5C66" stroke="none"/>
+      <path d="M12 25 Q18 29 24 25"/>
+    </g>
+  </defs>
+
+  <rect width="800" height="820" fill="#FFFFFF"/>
+
+  <!-- Light region tints preserve the installed composition. -->
+  <rect x="12" y="8" width="776" height="224" rx="18"
+        fill="#E9EDEF" fill-opacity="0.34"/>
+  <rect x="12" y="248" width="776" height="568" rx="18"
+        fill="#D4EFE6" fill-opacity="0.18"/>
+
+  <!-- A subtle folded page enriches the existing skill excerpt. -->
+  <path d="M236 326 H536 L556 346 V522 H236 Z"
+        fill="#FFFFFF" stroke="#4B5C66" stroke-opacity="0.22"/>
+  <path d="M536 326 V346 H556"
+        fill="#E9EDEF" stroke="#4B5C66" stroke-opacity="0.22"/>
+
+  <!-- Panel (a): the abstract prior paradigm. -->
+  <text id="prior-panel-title"
+        x="28" y="36"
+        class="panel-title">(a) Prior: per-workflow engineering</text>
+  <use href="#icon-hand-picked" x="550" y="14"/>
+  <text id="hand-picked-legend"
+        x="583" y="35" class="muted">hand-picked decisions</text>
+
+  <!-- Workflow A. -->
+  <text id="workflow-a-label"
+        x="32" y="95" font-size="19">workflow A</text>
+  <path class="link" d="M188 88 H404"/>
+
+  <g stroke="#4B5C66" fill="#E9EDEF">
+    <circle cx="188" cy="88" r="5"/>
+    <circle cx="296" cy="88" r="5"/>
+    <circle cx="404" cy="88" r="5"/>
+  </g>
+  <g stroke="#299D8D" fill="#D4EFE6">
+    <circle cx="242" cy="88" r="7"/>
+    <circle cx="350" cy="88" r="7"/>
+  </g>
+
+  <use href="#icon-hand-picked" x="230" y="52"/>
+  <use href="#icon-hand-picked" x="338" y="52"/>
+  <path class="link" d="M350 96 V117"/>
+  <path class="arrow" d="M242 96 V117 H568 V89 H587"/>
+  <text id="workflow-a-train-label"
+        x="503" y="106" class="muted">train</text>
+
+  <rect x="592" y="70" width="104" height="38" rx="19"
+        fill="#D4EFE6"/>
+  <use href="#icon-system-1" x="594" y="71"/>
+  <text id="workflow-a-specialized-model"
+        x="640" y="96" font-size="19"
+        class="chip-label s1-text">S1<tspan baseline-shift="sub" font-size="17">A</tspan></text>
+
+  <!-- Workflow B: different selected decisions and a separate model. -->
+  <text id="workflow-b-label"
+        x="32" y="169" font-size="19">workflow B</text>
+  <path class="link" d="M188 162 H404"/>
+
+  <g stroke="#4B5C66" fill="#E9EDEF">
+    <circle cx="242" cy="162" r="5"/>
+    <circle cx="350" cy="162" r="5"/>
+    <circle cx="404" cy="162" r="5"/>
+  </g>
+  <g stroke="#299D8D" fill="#D4EFE6">
+    <circle cx="188" cy="162" r="7"/>
+    <circle cx="296" cy="162" r="7"/>
+  </g>
+
+  <use href="#icon-hand-picked" x="176" y="126"/>
+  <use href="#icon-hand-picked" x="284" y="126"/>
+  <path class="link" d="M296 170 V191"/>
+  <path class="arrow" d="M188 170 V191 H568 V163 H587"/>
+  <text id="workflow-b-train-label"
+        x="503" y="180" class="muted">train</text>
+
+  <rect x="592" y="144" width="104" height="38" rx="19"
+        fill="#D4EFE6"/>
+  <use href="#icon-system-1" x="594" y="145"/>
+  <text id="workflow-b-specialized-model"
+        x="640" y="170" font-size="19"
+        class="chip-label s1-text">S1<tspan baseline-shift="sub" font-size="17">B</tspan></text>
+
+  <text id="prior-takeaway"
+        x="400" y="219" text-anchor="middle"
+        font-size="18" fill="#D2453F">one specialized System-1 per workflow</text>
+
+  <path id="panel-divider"
+        d="M28 240 H772"
+        fill="none" stroke="#4B5C66" stroke-opacity="0.45"/>
+
+  <!-- Panel (b): the installed layout, lightly enriched. -->
+  <text id="anys1-panel-title"
+        x="28" y="276"
+        class="panel-title">(b) AnyS1 (ours): one model across skills</text>
+
+  <circle cx="42" cy="308" r="12"
+          fill="#FFFFFF" stroke="#4B5C66"/>
+  <text id="offline-stage-number"
+        x="42" y="314" text-anchor="middle">1</text>
+  <text id="offline-stage-label"
+        x="64" y="314" font-size="19">Offline, once: mine and train</text>
+
+  <!-- Public skill library. -->
+
+  <use href="#icon-skill" x="102" y="362"/>
+  <use href="#icon-skill" x="94" y="370"/>
+  <use href="#icon-skill" x="86" y="378"/>
+  <text id="public-skill-count"
+        x="112" y="448" text-anchor="middle"
+        font-size="18">100K+ public skills</text>
+
+  <text id="offline-mine-label"
+        x="210" y="385" text-anchor="middle"
+        class="muted">mine</text>
+  <path class="arrow" d="M181 402 H231"/>
+
+  <!-- Verbatim source phrase and enumerable options. -->
+  <text id="example-skill-path"
+        x="244" y="351"
+        class="muted">e.g. frontend-review/SKILL.md</text>
+
+  <g fill="#FFF1AC">
+    <rect x="242" y="365" width="270" height="23" rx="2"/>
+    <rect x="242" y="389" width="300" height="23" rx="2"/>
+    <rect x="242" y="413" width="298" height="23" rx="2"/>
+    <rect x="242" y="437" width="184" height="23" rx="2"/>
+  </g>
+
+  <text id="skill-decision-phrase" x="244" y="382" font-size="19">
+    <tspan x="244" y="382">decide what kind of UI/UX work</tspan>
+    <tspan x="244" y="406">the request asks for: a new design,</tspan>
+    <tspan x="244" y="430">building it, reviewing existing UI, or</tspan>
+    <tspan x="244" y="454">fixing a specific issue</tspan>
+  </text>
+
+  <g fill="#E9EDEF">
+    <rect x="244" y="478" width="70" height="30" rx="15"/>
+    <rect x="322" y="478" width="70" height="30" rx="15"/>
+    <rect x="400" y="478" width="70" height="30" rx="15"/>
+    <rect x="478" y="478" width="70" height="30" rx="15"/>
+  </g>
+
+  <text id="mined-option-design"
+        x="279" y="499" text-anchor="middle"
+        class="chip-label muted">design</text>
+  <text id="mined-option-build"
+        x="357" y="499" text-anchor="middle"
+        class="chip-label muted">build</text>
+  <text id="mined-option-review"
+        x="435" y="499" text-anchor="middle"
+        class="chip-label muted">review</text>
+  <text id="mined-option-fix"
+        x="513" y="499" text-anchor="middle"
+        class="chip-label muted">fix</text>
+
+  <!-- One shared System-1. -->
+  <text id="offline-train-label"
+        x="578" y="385" text-anchor="middle"
+        class="muted">train</text>
+  <path class="arrow" d="M561 402 H602"/>
+
+  <text id="general-model-count"
+        x="688" y="351" text-anchor="middle"
+        font-size="19" class="s1-text">One general</text>
+  <rect x="608" y="375" width="160" height="42" rx="21"
+        fill="#D4EFE6"/>
+  <use href="#icon-system-1" x="622" y="378"/>
+  <text id="general-system-one"
+        x="665" y="402" font-size="19"
+        class="chip-label s1-text">System-1</text>
+
+  <!-- Runtime request and agent. -->
+  <circle cx="42" cy="554" r="12"
+          fill="#FFFFFF" stroke="#4B5C66"/>
+  <text id="runtime-stage-number"
+        x="42" y="560" text-anchor="middle">2</text>
+  <text id="runtime-stage-label"
+        x="64" y="560" font-size="19">Run time · select a skill</text>
+
+  <text id="runtime-request"
+        x="32" y="588" font-size="18">"Can you look over our landing page and tell me what feels off?"</text>
+  <use href="#icon-agent" x="646" y="574"/>
+  <text id="runtime-agent-label"
+        x="692" y="600" class="muted">any agent</text>
+
+  <!-- The original four-step grid is preserved. -->
+  <rect x="54" y="631" width="122" height="22" rx="2"
+        fill="#FFF1AC"/>
+  <text id="runtime-ui-work-type"
+        x="115" y="648" text-anchor="middle"
+        font-size="18">UI work type?</text>
+  <text id="runtime-inspect-page"
+        x="305" y="648" text-anchor="middle"
+        font-size="18">inspect page</text>
+  <text id="runtime-contrast-check"
+        x="495" y="648" text-anchor="middle"
+        font-size="18">contrast ok?</text>
+  <text id="runtime-write-critique"
+        x="685" y="648" text-anchor="middle"
+        font-size="18">write critique</text>
+
+  <path class="arrow" d="M194 642 H224"/>
+  <path class="arrow" d="M384 642 H414"/>
+  <path class="arrow" d="M574 642 H604"/>
+
+  <!-- Confident System-1 judgment. -->
+  <rect x="40" y="661" width="150" height="38" rx="19"
+        fill="#D4EFE6"/>
+  <use href="#icon-system-1" x="42" y="662"/>
+  <text id="runtime-ui-executor"
+        x="84" y="687" font-size="19"
+        class="chip-label s1-text">System-1</text>
+
+  <rect x="58" y="710" width="114" height="5" rx="2.5"
+        fill="#E9EDEF"/>
+  <rect x="58" y="710" width="103.74" height="5" rx="2.5"
+        fill="#299D8D"/>
+
+  <text id="accepted-review-confidence"
+        x="115" y="738" text-anchor="middle"
+        class="s1-text">review (high conf.)</text>
+  <text id="accepted-review-result"
+        x="115" y="760" text-anchor="middle"
+        class="s1-text">accept</text>
+
+  <!-- Code execution. -->
+  <rect x="249" y="661" width="112" height="38" rx="19"
+        fill="#E9EDEF"/>
+  <use href="#icon-code" x="251" y="662"/>
+  <text id="runtime-inspect-executor"
+        x="294" y="687" font-size="19"
+        class="chip-label muted">code</text>
+
+  <!-- Low-confidence judgment and System-2 deferral. -->
+  <rect x="420" y="661" width="150" height="38" rx="19"
+        fill="#D4EFE6"/>
+  <use href="#icon-system-1" x="422" y="662"/>
+  <text id="runtime-contrast-executor"
+        x="464" y="687" font-size="19"
+        class="chip-label s1-text">System-1</text>
+
+  <text id="deferred-contrast-confidence"
+        x="495" y="724" text-anchor="middle"
+        class="s1-text">low conf. → defer</text>
+  <path class="arrow" d="M495 733 V742"/>
+
+  <rect x="420" y="748" width="150" height="38" rx="19"
+        fill="#FDEBD4"/>
+  <use href="#icon-system-2" x="422" y="749"/>
+  <text id="contrast-fallback-executor"
+        x="464" y="774" font-size="19"
+        class="chip-label s2-text">System-2</text>
+
+  <!-- Open generation. -->
+  <rect x="610" y="661" width="150" height="38" rx="19"
+        fill="#FDEBD4"/>
+  <use href="#icon-system-2" x="612" y="662"/>
+  <text id="runtime-critique-executor"
+        x="654" y="687" font-size="19"
+        class="chip-label s2-text">System-2</text>
+
+  <text id="anys1-main-takeaway"
+        x="400" y="808" text-anchor="middle"
+        font-size="18" class="s1-text">one general System-1 for every skill, no per-workflow engineering</text>
+</svg>

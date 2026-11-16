@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 320" role="img" aria-label="Figure 3: Per-episode cost relative to All-S2 across SOPBench, ALFWorld, and WebShop" font-family="Inter, Arial, Helvetica, sans-serif">
+  <rect width="1080" height="320" fill="#FFFFFF"/>
+  <!-- Legend -->
+  <g transform="translate(270, 14)" font-size="12.5" font-weight="600" fill="#24343B">
+    <rect x="0" y="2" width="14" height="14" rx="3" fill="#FCD39B" stroke="#C26D1F" stroke-width="1.2"/>
+    <text x="20" y="13.5">System-2 at G-nodes (Generative)</text>
+    <rect x="242" y="2" width="14" height="14" rx="3" fill="#BFDBFE" stroke="#2563EB" stroke-width="1.2"/>
+    <text x="262" y="13.5">System-2 at E-nodes (Deferred)</text>
+    <rect x="476" y="2" width="14" height="14" rx="3" fill="#6EE7B7" stroke="#0F766E" stroke-width="1.2"/>
+    <text x="496" y="13.5">System-1 Inference Overhead</text>
+  </g>
+  <line x1="78" y1="250.0" x2="1048" y2="250.0" stroke="#94A3B8" stroke-width="1"/>
+  <text x="68" y="254.0" text-anchor="end" font-size="11.5" fill="#475569" font-family="JetBrains Mono, monospace">0.00×</text>
+  <line x1="78" y1="204.3" x2="1048" y2="204.3" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="4 4"/>
+  <text x="68" y="208.3" text-anchor="end" font-size="11.5" fill="#475569" font-family="JetBrains Mono, monospace">0.25×</text>
+  <line x1="78" y1="158.6" x2="1048" y2="158.6" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="4 4"/>
+  <text x="68" y="162.6" text-anchor="end" font-size="11.5" fill="#475569" font-family="JetBrains Mono, monospace">0.50×</text>
+  <line x1="78" y1="112.9" x2="1048" y2="112.9" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="4 4"/>
+  <text x="68" y="116.9" text-anchor="end" font-size="11.5" fill="#475569" font-family="JetBrains Mono, monospace">0.75×</text>
+  <line x1="78" y1="67.1" x2="1048" y2="67.1" stroke="#94A3B8" stroke-width="1"/>
+  <text x="68" y="71.1" text-anchor="end" font-size="11.5" fill="#475569" font-family="JetBrains Mono, monospace">1.00×</text>
+  <line x1="78" y1="52" x2="78" y2="250" stroke="#64748B" stroke-width="1.3"/>
+  <text transform="translate(20, 154.0) rotate(-90)" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1E293B">Relative Cost / All-S2</text>
+  <rect x="91.0" y="50" width="282.0" height="200" rx="8" fill="#F8FAFC" opacity="0.55"/>
+  <rect x="109.0" y="118.3" width="48" height="131.7" rx="2" fill="#FCD39B" stroke="#C26D1F" stroke-width="1.1"/>
+  <rect x="109.0" y="67.1" width="48" height="51.2" rx="2" fill="#BFDBFE" stroke="#2563EB" stroke-width="1.1"/>
+  <text x="133.0" y="61.1" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="JetBrains Mono, monospace">1.00×</text>
+  <text x="133.0" y="268" text-anchor="middle" font-size="10.8" font-weight="600" fill="#475569">All-S2</text>
+  <text x="133.0" y="282" text-anchor="middle" font-size="10" fill="#64748B" font-family="JetBrains Mono, monospace">(83.2%)</text>
+  <rect x="175.0" y="132.4" width="48" height="117.6" rx="2" fill="#FCD39B" stroke="#C26D1F" stroke-width="1.1"/>
+  <rect x="175.0" y="131.7" width="48" height="0.7" rx="1" fill="#BFDBFE" stroke="#2563EB" stroke-width="1.1"/>
+  <rect x="175.0" y="130.4" width="48" height="1.3" rx="1" fill="#6EE7B7" stroke="#0F766E" stroke-width="1.1"/>
+  <text x="199.0" y="124.4" text-anchor="middle" font-size="11" font-weight="700" fill="#0F766E" font-family="JetBrains Mono, monospace">0.65×</text>
+  <text x="199.0" y="268" text-anchor="middle" font-size="10.8" font-weight="700" fill="#0F172A">AnyS1 warm</text>
+  <text x="199.0" y="282" text-anchor="middle" font-size="10" fill="#64748B" font-family="JetBrains Mono, monospace">(84.3%)</text>
+  <rect x="241.0" y="118.3" width="48" height="131.7" rx="2" fill="#FCD39B" stroke="#C26D1F" stroke-width="1.1"/>
+  <rect x="241.0" y="83.0" width="48" height="35.3" rx="2" fill="#BFDBFE" stroke="#2563EB" stroke-width="1.1"/>
+  <rect x="241.0" y="81.5" width="48" height="1.5" rx="1" fill="#6EE7B7" stroke="#0F766E" stroke-width="1.1"/>
+  <text x="265.0" y="75.5" text-anchor="middle" font-size="11" font-weight="700" fill="#0F766E" font-family="JetBrains Mono, monospace">0.92×</text>
+  <text x="265.0" y="268" text-anchor="middle" font-size="10.8" font-weight="700" fill="#0F172A">AnyS1 cold</text>
+  <text x="265.0" y="282" text-anchor="middle" font-size="10" fill="#64748B" font-family="JetBrains Mono, monospace">(83.2%)</text>
+  <rect x="307.0" y="135.1" width="48" height="114.9" rx="2" fill="#FCD39B" stroke="#C26D1F" stroke-width="1.1"/>
+  <rect x="307.0" y="133.8" width="48" height="1.3" rx="1" fill="#6EE7B7" stroke="#0F766E" stroke-width="1.1"/>
+  <text x="331.0" y="127.8" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="JetBrains Mono, monospace">0.63×</text>
+  <text x="331.0" y="268" text-anchor="middle" font-size="10.8" font-weight="600" fill="#475569">All-S1</text>
+  <text x="331.0" y="282" text-anchor="middle" font-size="10" fill="#64748B" font-family="JetBrains Mono, monospace">(84.3%)</text>
+  <text x="232" y="305" text-anchor="middle" font-size="13" font-weight="700" fill="#0F172A">SOPBench (268 Tasks · E-Share 28%)</text>
+  <rect x="422.0" y="50" width="282.0" height="200" rx="8" fill="#F8FAFC" opacity="0.55"/>
+  <rect x="440.0" y="232.6" width="48" height="17.4" rx="2" fill="#FCD39B" stroke="#C26D1F" stroke-width="1.1"/>
+  <rect x="440.0" y="67.1" width="48" height="165.5" rx="2" fill="#BFDBFE" stroke="#2563EB" stroke-width="1.1"/>
+  <text x="464.0" y="61.1" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="JetBrains Mono, monospace">1.00×</text>
+  <text x="464.0" y="268" text-anchor="middle" font-size="10.8" font-weight="600" fill="#475569">All-S2</text>
+  <text x="464.0" y="282" text-anchor="middle" font-size="10" fill="#64748B" font-family="JetBrains Mono, monospace">(96.3%)</text>
+  <rect x="506.0" y="231.9" width="48" height="18.1" rx="2" fill="#FCD39B" stroke="#C26D1F" stroke-width="1.1"/>
+  <rect x="506.0" y="141.5" width="48" height="90.4" rx="2" fill="#BFDBFE" stroke="#2563EB" stroke-width="1.1"/>
+  <rect x="506.0" y="137.7" width="48" height="3.8" rx="1" fill="#6EE7B7" stroke="#0F766E" stroke-width="1.1"/>
+  <text x="530.0" y="131.7" text-anchor="middle" font-size="11" font-weight="700" fill="#0F766E" font-family="JetBrains Mono, monospace">0.61×</text>
+  <text x="530.0" y="268" text-anchor="middle" font-size="10.8" font-weight="700" fill="#0F172A">AnyS1 warm</text>
+  <text x="530.0" y="282" text-anchor="middle" font-size="10" fill="#64748B" font-family="JetBrains Mono, monospace">(95.5%)</text>
+  <rect x="572.0" y="231.9" width="48" height="18.1" rx="2" fill="#FCD39B" stroke="#C26D1F" stroke-width="1.1"/>
+  <rect x="572.0" y="115.4" width="48" height="116.5" rx="2" fill="#BFDBFE" stroke="#2563EB" stroke-width="1.1"/>
+  <rect x="572.0" y="111.7" width="48" height="3.7" rx="1" fill="#6EE7B7" stroke="#0F766E" stroke-width="1.1"/>
+  <text x="596.0" y="105.7" text-anchor="middle" font-size="11" font-weight="700" fill="#0F766E" font-family="JetBrains Mono, monospace">0.76×</text>
+  <text x="596.0" y="268" text-anchor="middle" font-size="10.8" font-weight="700" fill="#0F172A">AnyS1 cold</text>
+  <text x="596.0" y="282" text-anchor="middle" font-size="10" fill="#64748B" font-family="JetBrains Mono, monospace">(95.5%)</text>
+  <rect x="638.0" y="231.9" width="48" height="18.1" rx="2" fill="#FCD39B" stroke="#C26D1F" stroke-width="1.1"/>
+  <rect x="638.0" y="210.5" width="48" height="21.4" rx="2" fill="#6EE7B7" stroke="#0F766E" stroke-width="1.1"/>
+  <text x="662.0" y="204.5" text-anchor="middle" font-size="11" font-weight="600" fill="#B91C1C" font-family="JetBrains Mono, monospace">0.22×</text>
+  <text x="662.0" y="268" text-anchor="middle" font-size="10.8" font-weight="600" fill="#475569">All-S1</text>
+  <text x="662.0" y="282" text-anchor="middle" font-size="10" fill="#DC2626" font-family="JetBrains Mono, monospace">(40.3%*)</text>
+  <text x="563" y="305" text-anchor="middle" font-size="13" font-weight="700" fill="#0F172A">ALFWorld (134 Games · E-Share 90%)</text>
+  <rect x="753.0" y="50" width="282.0" height="200" rx="8" fill="#F8FAFC" opacity="0.55"/>
+  <rect x="771.0" y="238.3" width="48" height="11.7" rx="2" fill="#FCD39B" stroke="#C26D1F" stroke-width="1.1"/>
+  <rect x="771.0" y="67.1" width="48" height="171.2" rx="2" fill="#BFDBFE" stroke="#2563EB" stroke-width="1.1"/>
+  <text x="795.0" y="61.1" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="JetBrains Mono, monospace">1.00×</text>
+  <text x="795.0" y="268" text-anchor="middle" font-size="10.8" font-weight="600" fill="#475569">All-S2</text>
+  <text x="795.0" y="282" text-anchor="middle" font-size="10" fill="#64748B" font-family="JetBrains Mono, monospace">(66.9)</text>
+  <rect x="837.0" y="239.4" width="48" height="10.6" rx="2" fill="#FCD39B" stroke="#C26D1F" stroke-width="1.1"/>
+  <rect x="837.0" y="146.1" width="48" height="93.3" rx="2" fill="#BFDBFE" stroke="#2563EB" stroke-width="1.1"/>
+  <rect x="837.0" y="144.3" width="48" height="1.8" rx="1" fill="#6EE7B7" stroke="#0F766E" stroke-width="1.1"/>
+  <text x="861.0" y="138.3" text-anchor="middle" font-size="11" font-weight="700" fill="#0F766E" font-family="JetBrains Mono, monospace">0.58×</text>
+  <text x="861.0" y="268" text-anchor="middle" font-size="10.8" font-weight="700" fill="#0F172A">AnyS1 warm</text>
+  <text x="861.0" y="282" text-anchor="middle" font-size="10" fill="#64748B" font-family="JetBrains Mono, monospace">(68.1*)</text>
+  <rect x="903.0" y="239.2" width="48" height="10.8" rx="2" fill="#FCD39B" stroke="#C26D1F" stroke-width="1.1"/>
+  <rect x="903.0" y="167.0" width="48" height="72.2" rx="2" fill="#BFDBFE" stroke="#2563EB" stroke-width="1.1"/>
+  <rect x="903.0" y="165.2" width="48" height="1.8" rx="1" fill="#6EE7B7" stroke="#0F766E" stroke-width="1.1"/>
+  <text x="927.0" y="159.2" text-anchor="middle" font-size="11" font-weight="700" fill="#0F766E" font-family="JetBrains Mono, monospace">0.46×</text>
+  <text x="927.0" y="268" text-anchor="middle" font-size="10.8" font-weight="700" fill="#0F172A">AnyS1 cold</text>
+  <text x="927.0" y="282" text-anchor="middle" font-size="10" fill="#64748B" font-family="JetBrains Mono, monospace">(67.9)</text>
+  <rect x="969.0" y="234.1" width="48" height="15.9" rx="2" fill="#FCD39B" stroke="#C26D1F" stroke-width="1.1"/>
+  <rect x="969.0" y="232.5" width="48" height="1.6" rx="1" fill="#6EE7B7" stroke="#0F766E" stroke-width="1.1"/>
+  <text x="993.0" y="226.5" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="JetBrains Mono, monospace">0.10×</text>
+  <text x="993.0" y="268" text-anchor="middle" font-size="10.8" font-weight="600" fill="#475569">All-S1</text>
+  <text x="993.0" y="282" text-anchor="middle" font-size="10" fill="#64748B" font-family="JetBrains Mono, monospace">(66.3)</text>
+  <text x="894" y="305" text-anchor="middle" font-size="13" font-weight="700" fill="#0F172A">WebShop (500 Goals · E-Share 94%)</text>
+  <line x1="78" y1="250" x2="1048" y2="250" stroke="#64748B" stroke-width="1.3"/>
+</svg>
