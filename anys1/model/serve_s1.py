@@ -2,7 +2,7 @@
 
 Loads `Qwen/Qwen3.5-4B-Base` + LoRA adapter (`adapter_model.safetensors`) +
 `OptionInteractionHead` (`head.pt`) from a local directory or Hugging Face Hub
-repo (`middle-chunjie/AnyS1-4B`) and serves single-pass pointer probabilities.
+repo (`smSquirrel/AnyS1-4B`) and serves single-pass pointer probabilities.
 """
 
 from __future__ import annotations

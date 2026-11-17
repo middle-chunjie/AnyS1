@@ -12,10 +12,10 @@
   <a href="https://middle-chunjie.github.io/AnyS1/">
     <img src="https://img.shields.io/badge/Project_Page-Live-2563EB?style=for-the-badge&logo=githubpages&logoColor=white" alt="Project Page">
   </a>
-  <a href="https://huggingface.co/datasets/middle-chunjie/SkillDP">
+  <a href="https://huggingface.co/datasets/smSquirrel/SkillDP">
     <img src="https://img.shields.io/badge/Dataset-Any--DP-0F766E?style=for-the-badge&logo=huggingface&logoColor=white" alt="Any-DP Dataset">
   </a>
-  <a href="https://huggingface.co/middle-chunjie/AnyS1-4B">
+  <a href="https://huggingface.co/smSquirrel/AnyS1-4B">
     <img src="https://img.shields.io/badge/Model-AnyS1--4B-EA580C?style=for-the-badge&logo=huggingface&logoColor=white" alt="AnyS1-4B Model">
   </a>
   <img src="https://img.shields.io/badge/Paper-Coming_Soon-64748B?style=for-the-badge&logo=arxiv&logoColor=white" alt="Paper Coming Soon">
@@ -110,8 +110,8 @@ Evaluated across three benchmarks unseen during training (**SOPBench**, **ALFWor
 
 | Artifact | Type | Scale &amp; Details | Link |
 | :--- | :--- | :--- | :--- |
-| **Any-DP** | Container-Executed Decision Dataset | `1,072` public skills · `17,865` decision points · `25,986` consensus states (`89.2%` teacher agreement) | [🤗 `middle-chunjie/SkillDP`](https://huggingface.co/datasets/middle-chunjie/SkillDP) |
-| **AnyS1-4B** | Calibrated 4B Pointer Model | `Qwen3.5-4B-Base` + LoRA (`r=16`) + `OptionInteractionHead` (`oc`), trained with label smoothing $\epsilon=0.1$ | [🤗 `middle-chunjie/AnyS1-4B`](https://huggingface.co/middle-chunjie/AnyS1-4B) |
+| **Any-DP** | Container-Executed Decision Dataset | `1,072` public skills · `17,865` decision points · `25,986` consensus states (`89.2%` teacher agreement) | [🤗 `smSquirrel/SkillDP`](https://huggingface.co/datasets/smSquirrel/SkillDP) |
+| **AnyS1-4B** | Calibrated 4B Pointer Model | `Qwen3.5-4B-Base` + LoRA (`r=16`) + `OptionInteractionHead` (`oc`), trained with label smoothing $\epsilon=0.1$ | [🤗 `smSquirrel/AnyS1-4B`](https://huggingface.co/smSquirrel/AnyS1-4B) |
 
 ---
 
@@ -133,7 +133,7 @@ Download the **`AnyS1-4B`** checkpoint (`adapter_model.safetensors` + `head.pt`)
 
 ```bash
 python -m anys1.model.serve_s1 \
-  --checkpoint middle-chunjie/AnyS1-4B \
+  --checkpoint smSquirrel/AnyS1-4B \
   --host 127.0.0.1 \
   --port 8895 \
   --device cuda \
