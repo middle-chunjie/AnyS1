@@ -6,7 +6,7 @@
   <title>Thinking Fast, Anywhere: One System-1 for the Decision Points of Any Agent Workflow</title>
   <meta name="description" content="AnyS1: One Calibrated 4B System-1 for the Decision Points of Any Agent Workflow — Any-DP Dataset (1,072 skills, 25,986 executed states), Skill Compiler, MCP Server &amp; SDK.">
   <meta property="og:title" content="Thinking Fast, Anywhere: One System-1 for the Decision Points of Any Agent Workflow">
-  <meta property="og:description" content="Mine typed decision points from procedural skills (SKILL.md) once, train one calibrated 4B System-1 on 26K container-executed states, and cut System-2 agent cost by 30–44% and model time by 38–48% across unseen workflows.">
+  <meta property="og:description" content="Mine typed decision points from procedural skills (SKILL.md) once, train one calibrated 4B System-1 on 26K container-executed states, and cut cost by 75–91% and model time by 63–92% relative to an uncompiled System-2 agent across unseen workflows.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="figures/fig_motivation.svg">
   <meta name="twitter:card" content="summary_large_image">
@@ -1125,12 +1125,12 @@
 
         <div class="hero-tldr">
           <div style="margin-bottom: 8px; font-size: 0.93rem; color: var(--fg);">
-            <strong>TL;DR:</strong> Mine enumerable decision points from public <code>SKILL.md</code> files once, train a single calibrated 4B pointer <strong>System-1</strong> on 26K container-executed states (<strong>Any-DP</strong>), and execute any skill-guided workflow as a fast–slow dual system—cutting episode cost by <strong>30–44%</strong> and model-call time by <strong>38–48%</strong> without sacrificing task success.
+            <strong>TL;DR:</strong> Mine enumerable decision points from public <code>SKILL.md</code> files once, train a single calibrated 4B pointer <strong>System-1</strong> on 26K container-executed states (<strong>Any-DP</strong>), and execute any skill-guided workflow as a fast–slow dual system—cutting episode cost by <strong>75–91%</strong> and model-call time by <strong>63–92%</strong> relative to an uncompiled System-2 agent, without sacrificing task success.
           </div>
           <details style="font-size: 0.89rem; color: var(--fg-secondary); margin-top: 6px;">
             <summary style="cursor: pointer; font-weight: 600; color: var(--primary); user-select: none;">Read Full Paper Abstract</summary>
             <p style="margin: 10px 0 0; line-height: 1.65;">
-              Autonomous LLM agents excel at long-horizon tasks, yet querying a large model (<strong>System-2</strong>) at every step incurs high latency and cost—even though a large fraction of intermediate steps are merely bounded choices among known options. Existing dual-system agents offload such judgments to a lightweight decision model (<strong>System-1</strong>), but rely on decision points manually pre-defined for a single fixed workflow; meanwhile, general agents increasingly load procedural skills on demand whose instructions implicitly specify where to judge and among which options. We propose <strong>AnyS1</strong>, which mines grounded enumerable decision points across over 1,000 public skills and executes synthesized tasks in isolated containers to collect <strong>Any-DP</strong> (26K consensus-labeled execution states), training a single 4B pointer model with label smoothing so one System-1 serves unseen workflows. At run time, compiled workflows delegate an enumerable decision to System-1 in one forward pass when its confidence clears a threshold calibrated on unlabeled development runs (<strong>AnyS1<sub>warm</sub></strong>) or transferred zero-shot (<strong>AnyS1<sub>cold</sub></strong>), falling back to System-2 otherwise. Across three unseen benchmarks (SOPBench, ALFWorld, and WebShop) paired with <strong>DeepSeek-V4.1-Flash</strong> or <strong>GPT-6 Sol</strong> as System-2, AnyS1 preserves all-System-2 success while reducing episode cost by <strong>30–44%</strong> and model-call time by <strong>38–48%</strong> under AnyS1<sub>warm</sub>, and likewise maintains task reliability with zero target data under AnyS1<sub>cold</sub>.
+              Autonomous LLM agents excel at long-horizon tasks, yet querying a large model (<strong>System-2</strong>) at every step incurs high latency and cost—even though a large fraction of intermediate steps are merely bounded choices among known options. Existing dual-system agents offload such judgments to a lightweight decision model (<strong>System-1</strong>), but rely on decision points manually pre-defined for a single fixed workflow; meanwhile, general agents increasingly load procedural skills on demand whose instructions implicitly specify where to judge and among which options. We propose <strong>AnyS1</strong>, which mines grounded enumerable decision points across over 1,000 public skills and executes synthesized tasks in isolated containers to collect <strong>Any-DP</strong> (26K consensus-labeled execution states), training a single 4B pointer model with label smoothing so one System-1 serves unseen workflows. At run time, compiled workflows delegate an enumerable decision to System-1 in one forward pass when its confidence clears a threshold calibrated on unlabeled development runs (<strong>AnyS1<sub>warm</sub></strong>) or transferred zero-shot (<strong>AnyS1<sub>cold</sub></strong>), falling back to System-2 otherwise. Across three unseen benchmarks (SOPBench, ALFWorld, and WebShop) paired with <strong>DeepSeek-V4.1-Flash</strong> or <strong>GPT-6 Sol</strong> as System-2, AnyS1 preserves all-System-2 success while reducing episode cost by <strong>75–91%</strong> and model-call time by <strong>63–92%</strong> relative to an uncompiled System-2 agent under AnyS1<sub>warm</sub>, and likewise maintains task reliability with zero target data under AnyS1<sub>cold</sub>.
             </p>
           </details>
         </div>
@@ -1166,14 +1166,14 @@
           <div class="metric-sub">Container-executed trajectories outperform LLM-written synthetic states by +18.8 pts and cross-task real states by +7.0 pts.</div>
         </div>
         <div class="metric-card indigo">
-          <div class="metric-val">−30% to −44%</div>
-          <div class="metric-label">Episode Cost Reduction (AnyS1<sub>warm</sub>)</div>
-          <div class="metric-sub">Saves 38% avg (DeepSeek-V4.1-Flash) and 36% avg (GPT-6 Sol); AnyS1<sub>cold</sub> saves 29% / 31% avg with zero target runs.</div>
+          <div class="metric-val">−75% to −91%</div>
+          <div class="metric-label">Episode Cost Reduction vs. Uncompiled Agent (AnyS1<sub>warm</sub>)</div>
+          <div class="metric-sub">Saves 89% avg (DeepSeek-V4.1-Flash) and 82% avg (GPT-6 Sol) vs. 81% / 71% for the compiled All-S2; AnyS1<sub>cold</sub> saves 87% / 81% avg with zero target runs.</div>
         </div>
         <div class="metric-card amber">
           <div class="metric-val">55–81× Faster</div>
           <div class="metric-label">22–32 ms Single-Pass System-1</div>
-          <div class="metric-sub">One forward pass on H100 (vs. 1.51–1.78 s for S2 and 0.65–0.67 s for 4-rotation Jev), cutting episode model time by 38–48%.</div>
+          <div class="metric-sub">One forward pass on H100 (vs. 1.51–1.78 s for S2 and 0.65–0.67 s for 4-rotation Jev), cutting episode model time by 63–92% vs. the uncompiled agent.</div>
         </div>
       </div>
     </div>
@@ -1248,31 +1248,31 @@
         </div>
         <div style="display: flex; flex-direction: column; gap: 11px;">
           <div style="font-family: var(--font-mono); font-size: 0.74rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">
-            All-S2 Enumerable Share ($s_E$) &amp; Resulting AnyS1 Cost / Time
+            All-S2 Enumerable Share ($s_E$) &amp; AnyS1 Cost / Time vs. Uncompiled Agent
           </div>
           <div>
             <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px; font-size:0.8rem; font-weight:600; margin-bottom:4px;">
               <span>WebShop <span style="color:var(--muted); font-weight:500;">($s_E = 94\%$)</span></span>
-              <span style="font-family:var(--font-mono); font-size:0.76rem; color:var(--primary); white-space:nowrap;">42% sav warm · 54% sav cold · 0.59× time</span>
+              <span style="font-family:var(--font-mono); font-size:0.76rem; color:var(--primary); white-space:nowrap;">86% sav warm · 89% sav cold · 0.12× time</span>
             </div>
             <div class="prob-track" style="height:9px;"><div class="prob-fill" style="width:94.0%;"></div></div>
           </div>
           <div>
             <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px; font-size:0.8rem; font-weight:600; margin-bottom:4px;">
               <span>ALFWorld <span style="color:var(--muted); font-weight:500;">($s_E = 90\%$)</span></span>
-              <span style="font-family:var(--font-mono); font-size:0.76rem; color:var(--primary); white-space:nowrap;">39% sav warm · 24% sav cold · 0.61× time</span>
+              <span style="font-family:var(--font-mono); font-size:0.76rem; color:var(--primary); white-space:nowrap;">88% sav warm · 85% sav cold · 0.08× time</span>
             </div>
             <div class="prob-track" style="height:9px;"><div class="prob-fill" style="width:90.0%;"></div></div>
           </div>
           <div>
             <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px; font-size:0.8rem; font-weight:600; margin-bottom:4px;">
               <span>SOPBench <span style="color:var(--muted); font-weight:500;">($s_E = 28\%$)</span></span>
-              <span style="font-family:var(--font-mono); font-size:0.76rem; color:var(--s2-fg); white-space:nowrap;">35% sav warm · 8% sav cold · 0.62× time</span>
+              <span style="font-family:var(--font-mono); font-size:0.76rem; color:var(--s2-fg); white-space:nowrap;">91% sav warm · 87% sav cold · 0.30× time</span>
             </div>
             <div class="prob-track" style="height:9px;"><div class="prob-fill" style="width:28.0%; background:#f59e0b;"></div></div>
           </div>
           <div style="font-size: 0.79rem; color: var(--fg-secondary); background: var(--bg-subtle); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border);">
-            <strong>Compound Gain over Uncompiled Agents:</strong> Skill compilation cuts cost by <strong>4.2–7.3×</strong> (+18 avg pts); AnyS1<sub>warm</sub> removes <strong>30–44%</strong> of the remaining cost.
+            <strong>Compound Gain over Uncompiled Agents:</strong> Compiled All-S2 saves <strong>76–86%</strong> of the uncompiled agent's cost (+18 avg pts); AnyS1<sub>warm</sub> raises the saving to <strong>86–91%</strong> (DeepSeek-V4.1-Flash).
           </div>
         </div>
       </div>
@@ -1617,7 +1617,7 @@ Visible: countertop 1, cabinet 1–4, fridge 1, microwave 1, sinkbasin 1, coffee
           </div>
         </div>
         <div class="wx-takeaway">
-          <strong>Benchmark-level effect (ALFWorld, DeepSeek-V4.1-Flash, AnyS1<sub>warm</sub>):</strong> 51% of E-decisions delegated, episode cost reduced by 39% (0.61×) and model time to 0.61× of All-S2 (12.9 s vs. 21.3 s), success 95.5% vs. 96.3% (1 game lost).
+          <strong>Benchmark-level effect (ALFWorld, DeepSeek-V4.1-Flash, AnyS1<sub>warm</sub>):</strong> 51% of E-decisions delegated, episode cost reduced by 88% vs. the uncompiled agent (0.12×; All-S2: 0.19×) and model time from 163 s (uncompiled) and 21.3 s (All-S2) to 12.9 s, success 95.5% vs. 96.3% (1 game lost).
         </div>
       </div>
     </div>
@@ -1669,77 +1669,77 @@ Visible: countertop 1, cabinet 1–4, fridge 1, microwave 1, sinkbasin 1, coffee
               <tr>
                 <td><strong>System-2 Agent with Skills</strong> (Uncompiled)</td>
                 <td><span class="num-neg">55.2</span></td>
-                <td>7.3×</td>
+                <td>—</td>
                 <td>51.4</td>
                 <td><span class="num-neg">82.8</span></td>
-                <td>5.2×</td>
+                <td>—</td>
                 <td>163</td>
                 <td><span class="num-neg">54.9</span></td>
                 <td>34.4</td>
-                <td>4.2×</td>
+                <td>—</td>
                 <td>146</td>
                 <td><span class="num-neg">−17.8</span></td>
-                <td>5.6×</td>
+                <td>—</td>
               </tr>
               <tr>
                 <td><strong>Compiled Workflow (All-S2)</strong></td>
                 <td>83.2</td>
-                <td>—</td>
+                <td>86%</td>
                 <td>25.0</td>
                 <td><strong>96.3</strong></td>
-                <td>—</td>
+                <td>81%</td>
                 <td>21.3</td>
                 <td>66.9</td>
                 <td>38.0</td>
-                <td>—</td>
+                <td>76%</td>
                 <td>29.0</td>
                 <td>—</td>
-                <td>—</td>
+                <td>81%</td>
               </tr>
               <tr>
                 <td><strong>Jev as System-1</strong><sup>†</sup> (<code>jev-1.14.0</code> API)</td>
                 <td>84.0</td>
-                <td>2%</td>
+                <td>87%</td>
                 <td>23.9</td>
                 <td><strong>96.3</strong></td>
-                <td>15%</td>
+                <td>84%</td>
                 <td>20.5</td>
                 <td>67.1</td>
                 <td>38.6</td>
-                <td>28%</td>
+                <td>83%</td>
                 <td>17.3</td>
                 <td>+0.3</td>
-                <td>15%</td>
+                <td>84%</td>
               </tr>
               <tr class="highlight-row">
                 <td><strong>AnyS1<sub>warm</sub></strong> (50 unlabeled dev runs)</td>
                 <td><strong>84.3</strong></td>
-                <td><strong>35%</strong></td>
+                <td><strong>91%</strong></td>
                 <td><strong>15.6</strong></td>
                 <td>95.5</td>
-                <td><strong>39%</strong></td>
+                <td><strong>88%</strong></td>
                 <td><strong>12.9</strong></td>
                 <td><span class="num-pos">68.1*</span></td>
                 <td><strong>38.8</strong></td>
-                <td>42%</td>
+                <td>86%</td>
                 <td>17.1</td>
                 <td><span class="num-pos">+0.5</span></td>
-                <td><strong>38%</strong></td>
+                <td><strong>89%</strong></td>
               </tr>
               <tr class="highlight-row">
                 <td><strong>AnyS1<sub>cold</sub></strong> (transferred $\tau=0.918$, 0 runs)</td>
                 <td>83.2</td>
-                <td>8%</td>
+                <td>87%</td>
                 <td>21.2</td>
                 <td>95.5</td>
-                <td>24%</td>
+                <td>85%</td>
                 <td>15.7</td>
                 <td>67.9</td>
                 <td>38.0</td>
-                <td><strong>54%</strong></td>
+                <td><strong>89%</strong></td>
                 <td><strong>12.7</strong></td>
                 <td>+0.1</td>
-                <td>29%</td>
+                <td>87%</td>
               </tr>
               <tr class="row-group">
                 <td colspan="13">System-2: GPT-6 Sol (Same 4B System-1 Trained Only on Any-DP, Paired with a Stronger Unseen System-2)</td>
@@ -1747,68 +1747,68 @@ Visible: countertop 1, cabinet 1–4, fridge 1, microwave 1, sinkbasin 1, coffee
               <tr>
                 <td><strong>System-2 Agent with Skills</strong> (Uncompiled)</td>
                 <td><span class="num-neg">61.2</span></td>
-                <td>7.4×</td>
                 <td>—</td>
+                <td>207.6</td>
                 <td><span class="num-neg">88.8</span></td>
-                <td>2.3×</td>
                 <td>—</td>
+                <td>413.5</td>
                 <td><span class="num-neg">48.5</span></td>
                 <td>33.6</td>
-                <td>3.6×</td>
                 <td>—</td>
+                <td>317.3</td>
                 <td><span class="num-neg">−16.8</span></td>
-                <td>4.4×</td>
+                <td>—</td>
               </tr>
               <tr>
                 <td><strong>Compiled Workflow (All-S2)</strong></td>
                 <td>82.1</td>
-                <td>—</td>
+                <td>86%</td>
                 <td>124</td>
                 <td><strong>96.3</strong></td>
-                <td>—</td>
+                <td>56%</td>
                 <td>193</td>
                 <td><strong>70.6</strong></td>
                 <td><strong>41.8</strong></td>
-                <td>—</td>
+                <td>72%</td>
                 <td>81.4</td>
                 <td>—</td>
-                <td>—</td>
+                <td>71%</td>
               </tr>
               <tr class="highlight-row">
                 <td><strong>AnyS1<sub>warm</sub></strong> (50 Sol dev episodes)</td>
                 <td><strong>82.5</strong></td>
-                <td><strong>35%</strong></td>
+                <td><strong>91%</strong></td>
                 <td><strong>75.8</strong></td>
                 <td>95.5</td>
-                <td><strong>44%</strong></td>
+                <td><strong>75%</strong></td>
                 <td><strong>101</strong></td>
                 <td>70.4</td>
                 <td>40.0</td>
-                <td>30%</td>
+                <td>80%</td>
                 <td>49.4</td>
                 <td>−0.2</td>
-                <td><strong>36%</strong></td>
+                <td><strong>82%</strong></td>
               </tr>
               <tr class="highlight-row">
                 <td><strong>AnyS1<sub>cold</sub></strong> (unchanged transferred $\tau=0.918$)</td>
                 <td><strong>82.5</strong></td>
-                <td>14%</td>
+                <td>88%</td>
                 <td>107</td>
                 <td>94.0</td>
-                <td>29%</td>
+                <td>69%</td>
                 <td>134</td>
                 <td>70.1</td>
                 <td>40.4</td>
-                <td><strong>49%</strong></td>
+                <td><strong>86%</strong></td>
                 <td><strong>33.3</strong></td>
                 <td>−0.8</td>
-                <td>31%</td>
+                <td>81%</td>
               </tr>
             </tbody>
           </table>
         </div>
         <p style="font-size: 0.8rem; color: var(--muted); margin-top: 10px;">
-          <strong>Note:</strong> $^*$ indicates that the 95% paired bootstrap CI of the difference from <code>All-S2</code> excludes 0. <strong>Sav. %</strong> reports episode cost savings (%) relative to <code>All-S2</code> (<code>System-2 + System-1</code>, with self-hosted 4B System-1 priced at L4 GPU serving cost <code>$0.0045/1k</code> decisions and Jev at <code>$0.042/1M</code> input tokens; uncompiled System-2 rows show cost multiples). <strong>Time (s)</strong> reports critical-path model-call seconds per episode. Under both <strong>DeepSeek-V4.1-Flash</strong> and <strong>GPT-6 Sol</strong>, <strong>AnyS1<sub>warm</sub></strong> preserves success (raising WebShop score by <strong>+1.3*</strong> CI under Flash) while reducing episode cost by <strong>30–44%</strong> (mean <strong>38%</strong> / <strong>36%</strong>) and model-call time by <strong>38–48%</strong>.
+          <strong>Note:</strong> $^*$ indicates that the 95% paired bootstrap CI of the difference from <code>All-S2</code> excludes 0. <strong>Sav. %</strong> reports episode cost savings (%) relative to the uncompiled <code>System-2 Agent with Skills</code> (<code>System-2 + System-1</code>, with self-hosted 4B System-1 priced at L4 GPU serving cost <code>$0.0045/1k</code> decisions and Jev at <code>$0.042/1M</code> input tokens; uncompiled rows are the reference, —). <strong>Time (s)</strong> reports critical-path model-call seconds per episode. Under both <strong>DeepSeek-V4.1-Flash</strong> and <strong>GPT-6 Sol</strong>, <strong>AnyS1<sub>warm</sub></strong> preserves success (raising WebShop score by <strong>+1.3*</strong> CI under Flash) while reducing episode cost by <strong>75–91%</strong> (mean <strong>89%</strong> / <strong>82%</strong>, vs. <strong>81%</strong> / <strong>71%</strong> for All-S2) and model-call time by <strong>63–92%</strong> relative to the uncompiled agent.
         </p>
       </div>
 
@@ -1880,7 +1880,7 @@ Visible: countertop 1, cabinet 1–4, fridge 1, microwave 1, sinkbasin 1, coffee
               <thead>
                 <tr>
                   <th>Gate &amp; Calibration Ablation</th>
-                  <th>SOPBench Pass / Cost</th>
+                  <th>SOPBench Pass / Cost vs. Uncompiled</th>
                   <th>ALFWorld SR / Cost</th>
                   <th>WebShop Sc. / Cost</th>
                 </tr>
@@ -1889,27 +1889,27 @@ Visible: countertop 1, cabinet 1–4, fridge 1, microwave 1, sinkbasin 1, coffee
                 <tr class="row-group"><td colspan="4">Online Deferral Gate Ablation (Same 4B System-1)</td></tr>
                 <tr>
                   <td><strong>All-S2</strong> (0% delegated)</td>
-                  <td>83.2% / 1.00×</td>
-                  <td>96.3% / 1.00×</td>
-                  <td>66.9 / 1.00×</td>
+                  <td>83.2% / 0.14×</td>
+                  <td>96.3% / 0.19×</td>
+                  <td>66.9 / 0.24×</td>
                 </tr>
                 <tr>
                   <td><strong>All-S1</strong> (No gate · 100% delegated)</td>
-                  <td><strong>84.3%</strong> (+1.1) / 0.63×</td>
-                  <td><span class="num-neg">40.3% (-56.0*)</span> / 0.22×</td>
-                  <td>66.3 (-0.5) / 0.10×</td>
+                  <td><strong>84.3%</strong> (+1.1) / 0.09×</td>
+                  <td><span class="num-neg">40.3% (-56.0*)</span> / 0.04×</td>
+                  <td>66.3 (-0.5) / 0.02×</td>
                 </tr>
                 <tr class="highlight-row">
                   <td><strong>AnyS1<sub>cold</sub></strong> (Transferred $\tau=0.918$)</td>
-                  <td><strong>83.2% (0.0) / 0.92×</strong></td>
-                  <td><strong>95.5% (-0.7) / 0.76×</strong></td>
-                  <td><strong>67.9 (+1.0) / 0.46×</strong></td>
+                  <td><strong>83.2% (0.0) / 0.13×</strong></td>
+                  <td><strong>95.5% (-0.7) / 0.15×</strong></td>
+                  <td><strong>67.9 (+1.0) / 0.11×</strong></td>
                 </tr>
                 <tr class="highlight-row">
                   <td><strong>AnyS1<sub>warm</sub></strong> (50 S2 dev runs)</td>
-                  <td><strong>84.3% (+1.1) / 0.65×</strong></td>
-                  <td><strong>95.5% (-0.7) / 0.61×</strong></td>
-                  <td><strong>68.1 (+1.3*) / 0.58×</strong></td>
+                  <td><strong>84.3% (+1.1) / 0.09×</strong></td>
+                  <td><strong>95.5% (-0.7) / 0.12×</strong></td>
+                  <td><strong>68.1 (+1.3*) / 0.14×</strong></td>
                 </tr>
                 <tr class="row-group"><td colspan="4">Offline Calibration Objective Study (Transfer to SOPBench &amp; ALFWorld)</td></tr>
                 <tr class="highlight-row">
@@ -1944,10 +1944,10 @@ Visible: countertop 1, cabinet 1–4, fridge 1, microwave 1, sinkbasin 1, coffee
         <!-- Paper Figure 3 (High-Res Vector SVG) -->
         <div class="paper-fig-card">
           <div class="paper-fig-img-wrap" data-zoom-src="figures/fig_cost.svg" title="Click to enlarge Figure 3">
-            <img src="figures/fig_cost.svg" alt="Figure 3: Per-episode cost relative to All-S2 decomposed into G-nodes, E-nodes, and System-1 overhead">
+            <img src="figures/fig_cost.svg" alt="Figure 3: Per-episode cost and model time relative to the uncompiled System-2 agent, decomposed into G-nodes, E-nodes, and System-1 overhead">
           </div>
           <div class="paper-fig-caption">
-            <strong>Figure 3 (Click to Zoom):</strong> Per-episode cost relative to <code>All-S2</code> ($1.00\times$), split into System-2 at G-nodes, System-2 at E-nodes, and System-1 inference overhead across SOPBench, ALFWorld, and WebShop (Equation 1 decomposition).
+            <strong>Figure 3 (Click to Zoom):</strong> (a) Per-episode cost and (b) critical-path model time relative to the uncompiled System-2 agent with skills, split into System-2 at G-nodes, System-2 at E-nodes, and System-1 inference overhead across SOPBench, ALFWorld, and WebShop (Equation 1 decomposition).
           </div>
         </div>
         <div class="grid-2">
@@ -1991,16 +1991,22 @@ Visible: countertop 1, cabinet 1–4, fridge 1, microwave 1, sinkbasin 1, coffee
                   </tr>
                   <tr class="row-group"><td colspan="4">Critical-Path Model-Call Time per Episode</td></tr>
                   <tr>
-                    <td><strong>All-S2</strong> (Baseline Episode Model Time)</td>
-                    <td>25.0 s (1.00×)</td>
-                    <td>21.3 s (1.00×)</td>
-                    <td>29.0 s (1.00×)</td>
+                    <td><strong>System-2 Agent with Skills</strong> (Uncompiled Reference)</td>
+                    <td>51.4 s (1.00×)</td>
+                    <td>163 s (1.00×)</td>
+                    <td>146 s (1.00×)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>All-S2</strong> (Compiled Workflow)</td>
+                    <td>25.0 s (0.49×)</td>
+                    <td>21.3 s (0.13×)</td>
+                    <td>29.0 s (0.20×)</td>
                   </tr>
                   <tr class="highlight-row">
                     <td><strong>AnyS1<sub>warm</sub></strong> (Single-Pass Calibrated Gate)</td>
-                    <td><strong>15.6 s (0.62×)</strong></td>
-                    <td><strong>12.9 s (0.61×)</strong></td>
-                    <td><strong>17.1 s (0.59×)</strong></td>
+                    <td><strong>15.6 s (0.30×)</strong></td>
+                    <td><strong>12.9 s (0.08×)</strong></td>
+                    <td><strong>17.1 s (0.12×)</strong></td>
                   </tr>
                 </tbody>
               </table>
@@ -2013,13 +2019,13 @@ Visible: countertop 1, cabinet 1–4, fridge 1, microwave 1, sinkbasin 1, coffee
               <span class="pill pill-s1">Equation 1 Decomposition</span>
             </div>
             <p style="font-size: 0.83rem; color: var(--fg-secondary); margin-top: 0;">
-              Both dollar savings and wall-clock speedups follow the structural ceiling $s_E$ (the fraction of <code>All-S2</code> cost spent on E-nodes):
+              Savings below are relative to the uncompiled System-2 agent; what delegation can still remove after compilation follows $s_E$ (the fraction of <code>All-S2</code> cost spent on E-nodes):
             </p>
             <ul style="font-size: 0.83rem; color: var(--fg-secondary); padding-left: 18px; line-height: 1.7;">
-              <li><strong>WebShop ($s_E = 94\%$):</strong> System-2 does little besides answer E-nodes. Delegating 44% of E-decisions under <strong>AnyS1<sub>warm</sub></strong> cuts cost by <strong>42% (0.58×)</strong> and critical-path model time from <strong>29.0 s → 17.1 s (0.59×)</strong>; <strong>AnyS1<sub>cold</sub></strong> delegates 58% to cut cost by <strong>54% (0.46×)</strong>.</li>
-              <li><strong>ALFWorld ($s_E = 90\%$):</strong> <strong>AnyS1<sub>warm</sub></strong> delegates 51% of E-decisions (deferring room search nodes), cutting cost by <strong>39% (0.61×)</strong> and model-call time from <strong>21.3 s → 12.9 s (0.61×)</strong>.</li>
-              <li><strong>SOPBench ($s_E = 28\%$):</strong> Reasoning G-nodes (multi-turn dialogue and tool argument generation) account for 72% of All-S2 cost. <strong>AnyS1<sub>warm</sub></strong> delegates 99% of E-nodes to cut cost by <strong>35% (0.65× cost, 0.62× time)</strong>, slightly aided by shorter turns on delegated runs.</li>
-              <li><strong>Negligible System-1 Overhead:</strong> Under L4 serving (<code>$0.0045/1k</code> decisions), System-1 adds $\kappa \le 2.1\%$ of baseline cost and only <strong>22–32 ms</strong> per call (55–81× faster than System-2).</li>
+              <li><strong>WebShop ($s_E = 94\%$):</strong> System-2 does little besides answer E-nodes. Delegating 44% of E-decisions under <strong>AnyS1<sub>warm</sub></strong> cuts cost by <strong>86% (0.14×; All-S2: 0.24×)</strong> and critical-path model time from <strong>146 s → 17.1 s (0.12×)</strong>; <strong>AnyS1<sub>cold</sub></strong> delegates 58% to cut cost by <strong>89% (0.11×)</strong>.</li>
+              <li><strong>ALFWorld ($s_E = 90\%$):</strong> <strong>AnyS1<sub>warm</sub></strong> delegates 51% of E-decisions (deferring room search nodes), cutting cost by <strong>88% (0.12×; All-S2: 0.19×)</strong> and model-call time from <strong>163 s → 12.9 s (0.08×)</strong>.</li>
+              <li><strong>SOPBench ($s_E = 28\%$):</strong> Reasoning G-nodes (multi-turn dialogue and tool argument generation) account for 72% of All-S2 cost. <strong>AnyS1<sub>warm</sub></strong> delegates 99% of E-nodes to cut cost by <strong>91% (0.09× cost, 0.30× time; All-S2: 0.14× / 0.49×)</strong>, slightly aided by shorter turns on delegated runs.</li>
+              <li><strong>Negligible System-1 Overhead:</strong> Under L4 serving (<code>$0.0045/1k</code> decisions), System-1 adds $\kappa \le 2.1\%$ of All-S2 cost ($\le 0.4\%$ of the uncompiled agent's) and only <strong>22–32 ms</strong> per call (55–81× faster than System-2).</li>
             </ul>
           </div>
         </div>
@@ -2367,59 +2373,59 @@ Visible: countertop 1, cabinet 1–4, fridge 1, microwave 1, sinkbasin 1, coffee
     const GATE_SIM_BY_BACKBONE = {
       ds: {
         all_s2: {
-          summary: "<strong>All-S2 (DeepSeek-V4.1-Flash · Compiled Reference):</strong> Skills are compiled into D/E/G nodes with System-2 answering all E and G nodes. Cuts cost by 4.2–7.3× (+17.8 avg pt) over uncompiled agents and serves as our 1.00× baseline.",
+          summary: "<strong>All-S2 (DeepSeek-V4.1-Flash · Compiled Reference):</strong> Skills are compiled into D/E/G nodes with System-2 answering all E and G nodes. Saves 76–86% of the uncompiled agent's cost (+17.8 avg pt); bars show how its cost splits across node types.",
           style: "neutral",
           benchmarks: [
-            { name: "SOPBench", metric: "83.2% Pass", delta: "Ref (25.0s)", del: "0%", cost: "1.00×", g: 72.0, e: 28.0, s1: 0.0 },
-            { name: "ALFWorld", metric: "96.3% SR", delta: "Ref (21.3s)", del: "0%", cost: "1.00×", g: 9.5, e: 90.5, s1: 0.0 },
-            { name: "WebShop", metric: "66.9 Sc (38.0% SR)", delta: "Ref (29.0s)", del: "0%", cost: "1.00×", g: 6.4, e: 93.6, s1: 0.0 }
+            { name: "SOPBench", metric: "83.2% Pass", delta: "Ref (25.0s)", del: "0%", cost: "0.14× (-86%)", g: 72.0, e: 28.0, s1: 0.0 },
+            { name: "ALFWorld", metric: "96.3% SR", delta: "Ref (21.3s)", del: "0%", cost: "0.19× (-81%)", g: 9.5, e: 90.5, s1: 0.0 },
+            { name: "WebShop", metric: "66.9 Sc (38.0% SR)", delta: "Ref (29.0s)", del: "0%", cost: "0.24× (-76%)", g: 6.4, e: 93.6, s1: 0.0 }
           ]
         },
         anys1_warm: {
-          summary: "<strong>AnyS1<sub>warm</sub> + DeepSeek-V4.1-Flash (50 Unlabeled Dev Runs, 0 Human Labels):</strong> Fits $\\tau$ on 50 unlabeled dev runs. Delegates 44–99% of E-decisions in 1 forward pass (22–32 ms), saving <strong>35–42%</strong> cost (mean <strong>38%</strong>) and cutting model time to <strong>12.9–17.1 s</strong> while achieving <strong>+0.5 avg pt</strong> (+1.3* WebShop CI).",
+          summary: "<strong>AnyS1<sub>warm</sub> + DeepSeek-V4.1-Flash (50 Unlabeled Dev Runs, 0 Human Labels):</strong> Fits $\\tau$ on 50 unlabeled dev runs. Delegates 44–99% of E-decisions in 1 forward pass (22–32 ms), saving <strong>86–91%</strong> of the uncompiled agent's cost (mean <strong>89%</strong>) and cutting model time to <strong>12.9–17.1 s</strong> while achieving <strong>+0.5 avg pt</strong> (+1.3* WebShop CI).",
           style: "zlg",
           benchmarks: [
-            { name: "SOPBench", metric: "84.3% Pass", delta: "+1.1 · 15.6s", del: "99%", cost: "0.65× (-35%)", g: 64.3, e: 0.4, s1: 0.7 },
-            { name: "ALFWorld", metric: "95.5% SR", delta: "-0.7 · 12.9s", del: "51%", cost: "0.61× (-39%)", g: 9.9, e: 49.4, s1: 2.1 },
-            { name: "WebShop", metric: "68.1 Sc (38.8% SR)", delta: "+1.3* · 17.1s", del: "44%", cost: "0.58× (-42%)", g: 5.8, e: 51.0, s1: 1.0 }
+            { name: "SOPBench", metric: "84.3% Pass", delta: "+1.1 · 15.6s", del: "99%", cost: "0.09× (-91%)", g: 64.3, e: 0.4, s1: 0.7 },
+            { name: "ALFWorld", metric: "95.5% SR", delta: "-0.7 · 12.9s", del: "51%", cost: "0.12× (-88%)", g: 9.9, e: 49.4, s1: 2.1 },
+            { name: "WebShop", metric: "68.1 Sc (38.8% SR)", delta: "+1.3* · 17.1s", del: "44%", cost: "0.14× (-86%)", g: 5.8, e: 51.0, s1: 1.0 }
           ]
         },
         anys1_cold: {
-          summary: "<strong>AnyS1<sub>cold</sub> + DeepSeek-V4.1-Flash (Transferred $\\tau=0.918$, 0 Target Runs):</strong> Transfers a single threshold fitted on 153 held-out dev states with zero target-workflow runs. Keeps <strong>+0.1 avg pt</strong> while saving <strong>8–54%</strong> cost (mean <strong>29%</strong>).",
+          summary: "<strong>AnyS1<sub>cold</sub> + DeepSeek-V4.1-Flash (Transferred $\\tau=0.918$, 0 Target Runs):</strong> Transfers a single threshold fitted on 153 held-out dev states with zero target-workflow runs. Keeps <strong>+0.1 avg pt</strong> while saving <strong>85–89%</strong> of the uncompiled agent's cost (mean <strong>87%</strong>).",
           style: "s1",
           benchmarks: [
-            { name: "SOPBench", metric: "83.2% Pass", delta: "0.0 · 21.2s", del: "40%", cost: "0.92× (-8%)", g: 72.0, e: 19.3, s1: 0.8 },
-            { name: "ALFWorld", metric: "95.5% SR", delta: "-0.7 · 15.7s", del: "33%", cost: "0.76× (-24%)", g: 9.9, e: 63.7, s1: 2.0 },
-            { name: "WebShop", metric: "67.9 Sc (38.0% SR)", delta: "+1.0 · 12.7s", del: "58%", cost: "0.46× (-54%)", g: 5.9, e: 39.5, s1: 1.0 }
+            { name: "SOPBench", metric: "83.2% Pass", delta: "0.0 · 21.2s", del: "40%", cost: "0.13× (-87%)", g: 72.0, e: 19.3, s1: 0.8 },
+            { name: "ALFWorld", metric: "95.5% SR", delta: "-0.7 · 15.7s", del: "33%", cost: "0.15× (-85%)", g: 9.9, e: 63.7, s1: 2.0 },
+            { name: "WebShop", metric: "67.9 Sc (38.0% SR)", delta: "+1.0 · 12.7s", del: "58%", cost: "0.11× (-89%)", g: 5.9, e: 39.5, s1: 1.0 }
           ]
         },
       },
       sol: {
         all_s2: {
-          summary: "<strong>All-S2 (GPT-6 Sol · Compiled Reference):</strong> Frontier GPT-6 Sol answers all compiled E and G nodes (82.1% SOPBench, 96.3% ALFWorld, 70.6 WebShop score / 41.8% SR). Higher per-token API pricing makes System-1 inference overhead $\\kappa$ negligible.",
+          summary: "<strong>All-S2 (GPT-6 Sol · Compiled Reference):</strong> Frontier GPT-6 Sol answers all compiled E and G nodes (82.1% SOPBench, 96.3% ALFWorld, 70.6 WebShop score / 41.8% SR), saving 56–86% of the uncompiled Sol agent's cost. Higher per-token API pricing makes System-1 inference overhead $\\kappa$ negligible.",
           style: "neutral",
           benchmarks: [
-            { name: "SOPBench", metric: "82.1% Pass", delta: "Ref (124s)", del: "0%", cost: "1.00×", g: 72.0, e: 28.0, s1: 0.0 },
-            { name: "ALFWorld", metric: "96.3% SR", delta: "Ref (193s)", del: "0%", cost: "1.00×", g: 9.5, e: 90.5, s1: 0.0 },
-            { name: "WebShop", metric: "70.6 Sc (41.8% SR)", delta: "Ref (81.4s)", del: "0%", cost: "1.00×", g: 6.4, e: 93.6, s1: 0.0 }
+            { name: "SOPBench", metric: "82.1% Pass", delta: "Ref (124s)", del: "0%", cost: "0.14× (-86%)", g: 72.0, e: 28.0, s1: 0.0 },
+            { name: "ALFWorld", metric: "96.3% SR", delta: "Ref (193s)", del: "0%", cost: "0.44× (-56%)", g: 9.5, e: 90.5, s1: 0.0 },
+            { name: "WebShop", metric: "70.6 Sc (41.8% SR)", delta: "Ref (81.4s)", del: "0%", cost: "0.28× (-72%)", g: 6.4, e: 93.6, s1: 0.0 }
           ]
         },
         anys1_warm: {
-          summary: "<strong>AnyS1<sub>warm</sub> + GPT-6 Sol (50 Unlabeled Sol Dev Episodes, No Retraining):</strong> Using the unchanged Any-DP 4B System-1, AnyS1<sub>warm</sub> keeps task success within 0.2 avg pt (-0.2) of GPT-6 Sol <code>All-S2</code> while saving <strong>30–44%</strong> cost (mean <strong>36%</strong>) and <strong>39–48%</strong> model-call time.",
+          summary: "<strong>AnyS1<sub>warm</sub> + GPT-6 Sol (50 Unlabeled Sol Dev Episodes, No Retraining):</strong> Using the unchanged Any-DP 4B System-1, AnyS1<sub>warm</sub> keeps task success within 0.2 avg pt (-0.2) of GPT-6 Sol <code>All-S2</code> while saving <strong>75–91%</strong> of the uncompiled agent's cost (mean <strong>82%</strong>) and <strong>63–84%</strong> of its model-call time.",
           style: "zlg",
           benchmarks: [
-            { name: "SOPBench", metric: "82.5% Pass", delta: "+0.4 · 75.8s", del: "80%", cost: "0.65× (-35%)", g: 63.5, e: 1.0, s1: 0.5 },
-            { name: "ALFWorld", metric: "95.5% SR", delta: "-0.7 · 101s", del: "49%", cost: "0.56× (-44%)", g: 9.9, e: 44.5, s1: 1.6 },
-            { name: "WebShop", metric: "70.4 Sc (40.0% SR)", delta: "-0.2 · 49.4s", del: "37%", cost: "0.70× (-30%)", g: 6.0, e: 62.5, s1: 1.5 }
+            { name: "SOPBench", metric: "82.5% Pass", delta: "+0.4 · 75.8s", del: "80%", cost: "0.09× (-91%)", g: 63.5, e: 1.0, s1: 0.5 },
+            { name: "ALFWorld", metric: "95.5% SR", delta: "-0.7 · 101s", del: "49%", cost: "0.25× (-75%)", g: 9.9, e: 44.5, s1: 1.6 },
+            { name: "WebShop", metric: "70.4 Sc (40.0% SR)", delta: "-0.2 · 49.4s", del: "37%", cost: "0.20× (-80%)", g: 6.0, e: 62.5, s1: 1.5 }
           ]
         },
         anys1_cold: {
-          summary: "<strong>AnyS1<sub>cold</sub> + GPT-6 Sol (Unchanged Transferred $\\tau=0.918$, 0 Target Runs):</strong> Zero-shot threshold transfer to an unseen System-2 backbone saves <strong>14–49%</strong> cost (mean <strong>31%</strong>) and cuts WebShop model time from <strong>81.4s → 33.3s</strong>.",
+          summary: "<strong>AnyS1<sub>cold</sub> + GPT-6 Sol (Unchanged Transferred $\\tau=0.918$, 0 Target Runs):</strong> Zero-shot threshold transfer to an unseen System-2 backbone saves <strong>69–88%</strong> of the uncompiled agent's cost (mean <strong>81%</strong>) and cuts WebShop model time from <strong>317s (uncompiled) → 33.3s</strong>.",
           style: "s1",
           benchmarks: [
-            { name: "SOPBench", metric: "82.5% Pass", delta: "+0.4 · 107s", del: "37%", cost: "0.86× (-14%)", g: 71.5, e: 14.0, s1: 0.5 },
-            { name: "ALFWorld", metric: "94.0% SR", delta: "-2.2 · 134s", del: "33%", cost: "0.71× (-29%)", g: 9.9, e: 59.5, s1: 1.6 },
-            { name: "WebShop", metric: "70.1 Sc (40.4% SR)", delta: "-0.5 · 33.3s", del: "57%", cost: "0.51× (-49%)", g: 6.0, e: 44.0, s1: 1.0 }
+            { name: "SOPBench", metric: "82.5% Pass", delta: "+0.4 · 107s", del: "37%", cost: "0.12× (-88%)", g: 71.5, e: 14.0, s1: 0.5 },
+            { name: "ALFWorld", metric: "94.0% SR", delta: "-2.2 · 134s", del: "33%", cost: "0.31× (-69%)", g: 9.9, e: 59.5, s1: 1.6 },
+            { name: "WebShop", metric: "70.1 Sc (40.4% SR)", delta: "-0.5 · 33.3s", del: "57%", cost: "0.14× (-86%)", g: 6.0, e: 44.0, s1: 1.0 }
           ]
         },
       }
