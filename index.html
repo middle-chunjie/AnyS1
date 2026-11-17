@@ -1142,11 +1142,11 @@
             <span>💻 Code &amp; CLI</span>
             <span class="btn-badge">GitHub</span>
           </a>
-          <a href="https://huggingface.co/datasets/middle-chunjie/SkillDP" target="_blank" rel="noopener" class="btn">
+          <a href="https://huggingface.co/datasets/smSquirrel/SkillDP" target="_blank" rel="noopener" class="btn">
             <span>🤗 Dataset (Any-DP)</span>
             <span class="btn-badge">25,986 States</span>
           </a>
-          <a href="https://huggingface.co/middle-chunjie/AnyS1-4B" target="_blank" rel="noopener" class="btn">
+          <a href="https://huggingface.co/smSquirrel/AnyS1-4B" target="_blank" rel="noopener" class="btn">
             <span>🤗 Model (AnyS1-4B)</span>
             <span class="btn-badge">4B Pointer</span>
           </a>
@@ -2142,8 +2142,8 @@ Visible: countertop 1, cabinet 1–4, fridge 1, microwave 1, sinkbasin 1, coffee
       <div style="display: flex; gap: 16px; flex-wrap: wrap;">
         <span style="color: var(--muted); font-weight: 600;">Paper (coming soon)</span>
         <a href="https://github.com/middle-chunjie/AnyS1" target="_blank" rel="noopener" style="color: var(--muted); text-decoration: none;">GitHub</a>
-        <a href="https://huggingface.co/datasets/middle-chunjie/SkillDP" target="_blank" rel="noopener" style="color: var(--muted); text-decoration: none;">Any-DP Dataset</a>
-        <a href="https://huggingface.co/middle-chunjie/AnyS1-4B" target="_blank" rel="noopener" style="color: var(--muted); text-decoration: none;">AnyS1-4B Model</a>
+        <a href="https://huggingface.co/datasets/smSquirrel/SkillDP" target="_blank" rel="noopener" style="color: var(--muted); text-decoration: none;">Any-DP Dataset</a>
+        <a href="https://huggingface.co/smSquirrel/AnyS1-4B" target="_blank" rel="noopener" style="color: var(--muted); text-decoration: none;">AnyS1-4B Model</a>
         <a href="#compiler" style="color: var(--muted); text-decoration: none;">Skill Compiler</a>
       </div>
     </div>
@@ -2803,7 +2803,7 @@ Choose the authorized SOP mitigation action:
     const QS_SNIPPETS = {
       cli_mcp: `# 1. Install AnyS1 & launch local AnyS1-4B pointer server (22-32 ms/decision on H100)
 git clone https://github.com/middle-chunjie/AnyS1.git && cd AnyS1 && pip install -e ".[train]"
-python -m anys1.model.serve_s1 --checkpoint middle-chunjie/AnyS1-4B --port 8895 --dtype bf16
+python -m anys1.model.serve_s1 --checkpoint smSquirrel/AnyS1-4B --port 8895 --dtype bf16
 
 # 2. Compile any SKILL.md into D/E/G decision points + MCP hook + Python workflow
 anys1 compile examples/code_review_skill/SKILL.md -o ./compiled
@@ -2826,11 +2826,11 @@ print("Episode stats:", wf.runtime.summary())`,
 from huggingface_hub import snapshot_download
 
 # Load Any-DP (25,986 teacher-consensus container states across 1,072 public skills)
-ds = load_dataset("middle-chunjie/SkillDP")
+ds = load_dataset("smSquirrel/SkillDP")
 print(ds["train"][0]["question"], ds["train"][0]["options"])
 
 # Download calibrated AnyS1-4B LoRA + OptionInteractionHead weights
-ckpt_dir = snapshot_download("middle-chunjie/AnyS1-4B")`
+ckpt_dir = snapshot_download("smSquirrel/AnyS1-4B")`
     };
 
     function setQsTab(key) {
