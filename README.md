@@ -10,15 +10,15 @@
 
 <p>
   <a href="https://middle-chunjie.github.io/AnyS1/">
-    <img src="https://img.shields.io/badge/🌐_Project_Page-Live_Site-2563EB?style=for-the-badge" alt="Project Page">
+    <img src="https://img.shields.io/badge/Project_Page-Live-2563EB?style=for-the-badge&logo=githubpages&logoColor=white" alt="Project Page">
   </a>
   <a href="https://huggingface.co/datasets/middle-chunjie/SkillDP">
-    <img src="https://img.shields.io/badge/🤗_Dataset-Any--DP_(25.9K)-0F766E?style=for-the-badge" alt="Any-DP Dataset">
+    <img src="https://img.shields.io/badge/Dataset-Any--DP-0F766E?style=for-the-badge&logo=huggingface&logoColor=white" alt="Any-DP Dataset">
   </a>
   <a href="https://huggingface.co/middle-chunjie/AnyS1-4B">
-    <img src="https://img.shields.io/badge/🤗_Model-AnyS1--4B-EA580C?style=for-the-badge" alt="AnyS1-4B Model">
+    <img src="https://img.shields.io/badge/Model-AnyS1--4B-EA580C?style=for-the-badge&logo=huggingface&logoColor=white" alt="AnyS1-4B Model">
   </a>
-  <img src="https://img.shields.io/badge/📄_Paper-Coming_Soon-64748B?style=for-the-badge" alt="Paper Coming Soon">
+  <img src="https://img.shields.io/badge/Paper-Coming_Soon-64748B?style=for-the-badge&logo=arxiv&logoColor=white" alt="Paper Coming Soon">
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/License-Apache_2.0-334155?style=for-the-badge" alt="Apache 2.0 License">
   </a>
@@ -52,7 +52,7 @@
 
 ## ✨ Highlights
 
-| 🔀 64.5% E-Nodes | 🧪 83.8% Held-Out Dev | 💰 −30% to −44% Cost | ⚡ 22–32 ms Decisions |
+| 🔀 64.5% E-Nodes | 🧪 83.8% Held-Out Dev | 💰 −30% to −44% Cost | ⚡ 22–32 ms S1 |
 | :--- | :--- | :--- | :--- |
 | `17,865` decision points mined across `1,072` public skills (`16` categories); `100%` of skills contain $\ge 1$ enumerable branch | `25,986` consensus container states (**Any-DP**); outperforms synthetic states by **+18.8 pts** and cross-task real states by **+7.0 pts** | Matches or beats `All-S2` under both **DeepSeek-V4.1-Flash** (`38%` avg saving) and **GPT-6 Sol** (`36%` avg saving), cutting model time by **38–48%** | Single H100 `bf16` forward pass (`55–81×` faster than System-2 calls; serving overhead $\kappa \le 2.1\%$) |
 
@@ -89,11 +89,11 @@ Evaluated across three benchmarks unseen during training (**SOPBench**, **ALFWor
 | | Compiled Workflow (`All-S2`) | `83.2` (– / 25.0s) | **`96.3`** (– / 21.3s) | `66.9` / `38.0` (– / 29.0s) | `–` | `–` |
 | | `Jev` as System-1† | `84.0` (2% / 23.9s) | **`96.3`** (15% / 20.5s) | `67.1` / `38.6` (28% / 17.3s) | `+0.3` | `15%` |
 | | **`AnyS1_warm`** *(50 unlabeled dev runs)* | **`84.3`** (**35%** / **15.6s**) | `95.5` (**39%** / **12.9s**) | **`68.1*`** / **`38.8`** (42% / 17.1s) | **`+0.5`** | **`38%`** |
-| | **`AnyS1_cold`** *(transferred $\tau=0.918$, 0 runs)* | `83.2` (8% / 21.2s) | `95.5` (24% / 15.7s) | `67.9` / `38.0` (**54%** / **12.7s**) | `+0.1` | `29%` |
+| | **`AnyS1_cold`** *(transferred τ = 0.918, 0 runs)* | `83.2` (8% / 21.2s) | `95.5` (24% / 15.7s) | `67.9` / `38.0` (**54%** / **12.7s**) | `+0.1` | `29%` |
 | **GPT-6 Sol** | `System-2` Agent w/ Skills *(Uncompiled)* | `61.2` (7.4× / –) | `88.8` (2.3× / –) | `48.5` / `33.6` (3.6× / –) | `−16.8` | `4.4×` cost |
 | | Compiled Workflow (`All-S2`) | `82.1` (– / 124s) | **`96.3`** (– / 193s) | **`70.6`** / **`41.8`** (– / 81.4s) | `–` | `–` |
 | | **`AnyS1_warm`** *(50 Sol dev episodes)* | **`82.5`** (**35%** / **75.8s**) | `95.5` (**44%** / **101s**) | `70.4` / `40.0` (30% / 49.4s) | `−0.2` | **`36%`** |
-| | **`AnyS1_cold`** *(unchanged $\tau=0.918$)* | **`82.5`** (14% / 107s) | `94.0` (29% / 134s) | `70.1` / `40.4` (**49%** / **33.3s**) | `−0.8` | `31%` |
+| | **`AnyS1_cold`** *(unchanged τ = 0.918)* | **`82.5`** (14% / 107s) | `94.0` (29% / 134s) | `70.1` / `40.4` (**49%** / **33.3s**) | `−0.8` | `31%` |
 
 <div align="center">
   <img src="assets/fig_cost.png" width="100%" alt="Per-episode cost relative to All-S2 decomposed into G-nodes, E-nodes, and System-1 overhead">
