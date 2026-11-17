@@ -46,15 +46,15 @@
 </div>
 
 > [!IMPORTANT]
-> **TL;DR:** Prior dual-system agents hard-code System-1 hooks per workflow. **AnyS1** exploits the procedural structure of `SKILL.md` repositories to build **one general 4B System-1** that transfers zero-shot across unseen workflows and frontier System-2 backbones (**DeepSeek-V4.1-Flash** and **GPT-6 Sol**) — preserving `All-S2` task success while cutting episode cost by **30–44%** and critical-path model time by **38–48%** under `AnyS1_warm`, and maintaining reliability with zero target data under `AnyS1_cold`.
+> **TL;DR:** Prior dual-system agents hard-code System-1 hooks per workflow. **AnyS1** exploits the procedural structure of `SKILL.md` repositories to build **one general 4B System-1** that transfers zero-shot across unseen workflows and frontier System-2 backbones (**DeepSeek-V4.1-Flash** and **GPT-6 Sol**) — preserving `All-S2` task success while cutting episode cost by **75–91%** and critical-path model time by **63–92%** relative to an uncompiled System-2 agent under `AnyS1_warm`, and maintaining reliability with zero target data under `AnyS1_cold`.
 
 ---
 
 ## ✨ Highlights
 
-| 🔀 64.5% E-Nodes | 🧪 83.8% Held-Out Dev | 💰 −30% to −44% Cost | ⚡ 22–32 ms S1 |
+| 🔀 64.5% E-Nodes | 🧪 83.8% Held-Out Dev | 💰 −75% to −91% Cost | ⚡ 22–32 ms S1 |
 | :--- | :--- | :--- | :--- |
-| `17,865` decision points mined across `1,072` public skills (`16` categories); `100%` of skills contain $\ge 1$ enumerable branch | `25,986` consensus container states (**Any-DP**); outperforms synthetic states by **+18.8 pts** and cross-task real states by **+7.0 pts** | Matches or beats `All-S2` under both **DeepSeek-V4.1-Flash** (`38%` avg saving) and **GPT-6 Sol** (`36%` avg saving), cutting model time by **38–48%** | Single H100 `bf16` forward pass (`55–81×` faster than System-2 calls; serving overhead $\kappa \le 2.1\%$) |
+| `17,865` decision points mined across `1,072` public skills (`16` categories); `100%` of skills contain $\ge 1$ enumerable branch | `25,986` consensus container states (**Any-DP**); outperforms synthetic states by **+18.8 pts** and cross-task real states by **+7.0 pts** | Matches `All-S2` success under both **DeepSeek-V4.1-Flash** (`89%` avg saving vs. uncompiled agent) and **GPT-6 Sol** (`82%`), cutting model time by **63–92%** | Single H100 `bf16` forward pass (`55–81×` faster than System-2 calls; serving overhead $\kappa \le 2.1\%$) |
 
 ---
 
@@ -85,22 +85,24 @@ Evaluated across three benchmarks unseen during training (**SOPBench**, **ALFWor
 
 | System-2 | Configuration | SOPBench Pass (Sav. % / Time) | ALFWorld SR (Sav. % / Time) | WebShop Score / SR (Sav. % / Time) | Avg. $\Delta$ pt | Avg. Sav. % |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: |
-| **DeepSeek-V4.1-Flash** | `System-2` Agent w/ Skills *(Uncompiled)* | `55.2` (7.3× / 51.4s) | `82.8` (5.2× / 163s) | `54.9` / `34.4` (4.2× / 146s) | `−17.8` | `5.6×` cost |
-| | Compiled Workflow (`All-S2`) | `83.2` (– / 25.0s) | **`96.3`** (– / 21.3s) | `66.9` / `38.0` (– / 29.0s) | `–` | `–` |
-| | `Jev` as System-1† | `84.0` (2% / 23.9s) | **`96.3`** (15% / 20.5s) | `67.1` / `38.6` (28% / 17.3s) | `+0.3` | `15%` |
-| | **`AnyS1_warm`** *(50 unlabeled dev runs)* | **`84.3`** (**35%** / **15.6s**) | `95.5` (**39%** / **12.9s**) | **`68.1*`** / **`38.8`** (42% / 17.1s) | **`+0.5`** | **`38%`** |
-| | **`AnyS1_cold`** *(transferred τ = 0.918, 0 runs)* | `83.2` (8% / 21.2s) | `95.5` (24% / 15.7s) | `67.9` / `38.0` (**54%** / **12.7s**) | `+0.1` | `29%` |
-| **GPT-6 Sol** | `System-2` Agent w/ Skills *(Uncompiled)* | `61.2` (7.4× / –) | `88.8` (2.3× / –) | `48.5` / `33.6` (3.6× / –) | `−16.8` | `4.4×` cost |
-| | Compiled Workflow (`All-S2`) | `82.1` (– / 124s) | **`96.3`** (– / 193s) | **`70.6`** / **`41.8`** (– / 81.4s) | `–` | `–` |
-| | **`AnyS1_warm`** *(50 Sol dev episodes)* | **`82.5`** (**35%** / **75.8s**) | `95.5` (**44%** / **101s**) | `70.4` / `40.0` (30% / 49.4s) | `−0.2` | **`36%`** |
-| | **`AnyS1_cold`** *(unchanged τ = 0.918)* | **`82.5`** (14% / 107s) | `94.0` (29% / 134s) | `70.1` / `40.4` (**49%** / **33.3s**) | `−0.8` | `31%` |
+| **DeepSeek-V4.1-Flash** | `System-2` Agent w/ Skills *(Uncompiled)* | `55.2` (– / 51.4s) | `82.8` (– / 163s) | `54.9` / `34.4` (– / 146s) | `−17.8` | reference |
+| | Compiled Workflow (`All-S2`) | `83.2` (86% / 25.0s) | **`96.3`** (81% / 21.3s) | `66.9` / `38.0` (76% / 29.0s) | `–` | `81%` |
+| | `Jev` as System-1† | `84.0` (87% / 23.9s) | **`96.3`** (84% / 20.5s) | `67.1` / `38.6` (83% / 17.3s) | `+0.3` | `84%` |
+| | **`AnyS1_warm`** *(50 unlabeled dev runs)* | **`84.3`** (**91%** / **15.6s**) | `95.5` (**88%** / **12.9s**) | **`68.1*`** / **`38.8`** (86% / 17.1s) | **`+0.5`** | **`89%`** |
+| | **`AnyS1_cold`** *(transferred τ = 0.918, 0 runs)* | `83.2` (87% / 21.2s) | `95.5` (85% / 15.7s) | `67.9` / `38.0` (**89%** / **12.7s**) | `+0.1` | `87%` |
+| **GPT-6 Sol** | `System-2` Agent w/ Skills *(Uncompiled)* | `61.2` (– / 207.6s) | `88.8` (– / 413.5s) | `48.5` / `33.6` (– / 317.3s) | `−16.8` | reference |
+| | Compiled Workflow (`All-S2`) | `82.1` (86% / 124s) | **`96.3`** (56% / 193s) | **`70.6`** / **`41.8`** (72% / 81.4s) | `–` | `71%` |
+| | **`AnyS1_warm`** *(50 Sol dev episodes)* | **`82.5`** (**91%** / **75.8s**) | `95.5` (**75%** / **101s**) | `70.4` / `40.0` (80% / 49.4s) | `−0.2` | **`82%`** |
+| | **`AnyS1_cold`** *(unchanged τ = 0.918)* | **`82.5`** (88% / 107s) | `94.0` (69% / 134s) | `70.1` / `40.4` (**86%** / **33.3s**) | `−0.8` | `81%` |
+
+*Sav. %: episode cost saving relative to the uncompiled `System-2` agent with skills under the same System-2; Time: critical-path model-call seconds per episode; Avg. Δ pt: macro-mean primary-metric difference from `All-S2`.*
 
 <div align="center">
-  <img src="assets/fig_cost.png" width="100%" alt="Per-episode cost relative to All-S2 decomposed into G-nodes, E-nodes, and System-1 overhead">
+  <img src="assets/fig_cost.png" width="100%" alt="Per-episode cost and model time relative to the uncompiled System-2 agent, decomposed into G-nodes, E-nodes, and System-1 overhead">
 </div>
 
 - **Why Both Gate & Label Smoothing Matter:** Without confidence deferral (`All-S1`), ALFWorld collapses from `96.3% → 40.3%` on open-world search nodes; without label smoothing ($\epsilon = 0.1$), plain cross-entropy saturates probabilities ($\tau: 0.904 \to 0.998$) and drops ALFWorld delegation agreement from `98.4% → 83.0%`.
-- **Structural Cost Ceiling:** Compilation first cuts cost by `4.2–7.3×` (`+18` avg pts); `AnyS1_warm` removes **30–44%** of the remaining episode cost with `AnyS1` serving priced at L4 GPU cost (`$0.0045` per 1K decisions, $\kappa \le 2.1\%$).
+- **Structural Cost Ceiling:** Relative to an uncompiled System-2 agent, the compiled `All-S2` already saves `56–86%` of episode cost (`+18` avg pts); `AnyS1_warm` raises the saving to **75–91%** with `AnyS1` serving priced at L4 GPU cost (`$0.0045` per 1K decisions, $\kappa \le 2.1\%$).
 
 ---
 
