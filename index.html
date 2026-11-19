@@ -1101,7 +1101,7 @@
       </nav>
       <div class="nav-actions">
         <a href="https://github.com/middle-chunjie/AnyS1" target="_blank" rel="noopener" class="btn" style="padding: 6px 12px; font-size: 0.79rem;">💻 GitHub</a>
-        <span class="btn" style="padding: 6px 12px; font-size: 0.79rem; opacity: 0.6; cursor: default;" title="Paper link will be added after release">📄 Paper (coming soon)</span>
+        <a href="https://arxiv.org/abs/2611.23751" target="_blank" rel="noopener" class="btn" style="padding: 6px 12px; font-size: 0.79rem;">📄 Paper</a>
         <button class="theme-btn" id="themeToggle" title="Toggle light/dark theme" aria-label="Toggle theme">🌙</button>
       </div>
     </div>
@@ -1137,7 +1137,10 @@
 
         <!-- Canonical Hugging Face Daily Paper Artifact Bar -->
         <div class="btn-row">
-          <span class="btn" style="opacity: 0.6; cursor: default;" title="Paper link will be added after release">📄 Paper (coming soon)</span>
+          <a href="https://arxiv.org/abs/2611.23751" target="_blank" rel="noopener" class="btn">
+            <span>📄 Paper</span>
+            <span class="btn-badge">arXiv</span>
+          </a>
           <a href="https://github.com/middle-chunjie/AnyS1" target="_blank" rel="noopener" class="btn">
             <span>💻 Code &amp; CLI</span>
             <span class="btn-badge">GitHub</span>
@@ -2123,11 +2126,14 @@ Visible: countertop 1, cabinet 1–4, fridge 1, microwave 1, sinkbasin 1, coffee
             <span style="font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; color: var(--fg-secondary);">BibTeX Citation</span>
             <button class="btn" id="copyBibBtn" style="padding: 5px 12px; font-size: 0.78rem;">📋 Copy BibTeX</button>
           </div>
-          <pre class="code-box" id="bibBlock" style="margin: 0; background: var(--surface); flex: 1;">@inproceedings{anys1_2027,
-  title     = {Thinking Fast, Anywhere: One System-1 for the Decision Points of Any Agent Workflow},
-  booktitle = {Proceedings of the Annual Meeting of the Association for Computational Linguistics (ACL)},
-  year      = {2027},
-  url       = {https://github.com/middle-chunjie/AnyS1}
+          <pre class="code-box" id="bibBlock" style="margin: 0; background: var(--surface); flex: 1;">@misc{li2026anys1,
+  title         = {Thinking Fast, Anywhere: One System-1 for the Decision Points of Any Agent Workflow},
+  author        = {Rui Li and Liyang He and Zheng Zhang and Zhenya Huang and Qi Liu},
+  year          = {2026},
+  eprint        = {2611.23751},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url           = {https://arxiv.org/abs/2611.23751}
 }</pre>
         </div>
       </div>
