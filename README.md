@@ -18,7 +18,9 @@
   <a href="https://huggingface.co/smSquirrel/AnyS1-4B">
     <img src="https://img.shields.io/badge/Model-AnyS1--4B-EA580C?style=for-the-badge&logo=huggingface&logoColor=white" alt="AnyS1-4B Model">
   </a>
-  <img src="https://img.shields.io/badge/Paper-Coming_Soon-64748B?style=for-the-badge&logo=arxiv&logoColor=white" alt="Paper Coming Soon">
+  <a href="https://arxiv.org/abs/2611.23751">
+    <img src="https://img.shields.io/badge/arXiv-2611.23751-B31B1B?style=for-the-badge&logo=arxiv&logoColor=white" alt="arXiv 2611.23751">
+  </a>
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/License-Apache_2.0-334155?style=for-the-badge" alt="Apache 2.0 License">
   </a>
@@ -242,11 +244,14 @@ python -m anys1.model.train_s1 \
 If you find **AnyS1** or **Any-DP** useful in your research, please cite:
 
 ```bibtex
-@inproceedings{anys1_2027,
-  title     = {Thinking Fast, Anywhere: One System-1 for the Decision Points of Any Agent Workflow},
-  booktitle = {Proceedings of the Annual Meeting of the Association for Computational Linguistics (ACL)},
-  year      = {2027},
-  url       = {https://github.com/middle-chunjie/AnyS1}
+@misc{li2026anys1,
+  title         = {Thinking Fast, Anywhere: One System-1 for the Decision Points of Any Agent Workflow},
+  author        = {Rui Li and Liyang He and Zheng Zhang and Zhenya Huang and Qi Liu},
+  year          = {2026},
+  eprint        = {2611.23751},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url           = {https://arxiv.org/abs/2611.23751}
 }
 ```
 
